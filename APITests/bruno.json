@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Cloudmailin",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cloudmailin"
+version = "0.1.0"
+description = ""
+authors = ["Alvaro Aguilar <alvaro.aguilar.lopez@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.1.0"
+gunicorn = "^23.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
