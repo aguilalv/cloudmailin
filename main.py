@@ -8,5 +8,6 @@ def login():
     data_received = request.get_json()
     
     f = data_received['envelope']['from']
+    s = data_received['headers']['subject']
 
-    return f
+    return f"Message from {f} about {s}"
