@@ -1,3 +1,4 @@
+from typing import Dict
 from pydantic import BaseModel, EmailStr, model_validator
 
 
@@ -9,9 +10,6 @@ class Email(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def flatten_payload(cls, values):
-        """
-        Flatten the incoming nested payload to match the model structure.
-        """
         if not isinstance(values, dict):
             raise ValueError("Input must be a dictionary")
 
@@ -23,3 +21,11 @@ class Email(BaseModel):
             "recipient": envelope.get("to"),
             "subject": headers.get("subject"),
         }
+
+    @classmethod
+    def from_flat_data(cls, sender: str, recipient: str, subject: str) -> "Email":
+        """Factory method for cleaner test initialization."""
+        return cls(
+            envelope={"from": sender, "to": recipient},
+            headers={"subject": subject}
+        )
