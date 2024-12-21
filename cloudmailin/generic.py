@@ -13,12 +13,16 @@ def new_generic_email():
 
         email = Email(**data_received)
 
-        return jsonify({
-            "sender":email.sender,
-            "recipient":email.recipient,
-            "subject":email.subject
-        }),200
+        return (
+            jsonify(
+                {
+                    "sender": email.sender,
+                    "recipient": email.recipient,
+                    "subject": email.subject,
+                }
+            ),
+            200,
+        )
 
     except ValidationError as e:
         return jsonify({"error": e.errors()}), 400
-

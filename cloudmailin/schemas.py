@@ -1,11 +1,12 @@
 from pydantic import BaseModel, EmailStr, model_validator
 
+
 class Email(BaseModel):
     sender: EmailStr
     recipient: EmailStr
     subject: str
 
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def flatten_payload(cls, values):
         """
@@ -20,5 +21,5 @@ class Email(BaseModel):
         return {
             "sender": envelope.get("from"),
             "recipient": envelope.get("to"),
-            "subject": headers.get("subject")
+            "subject": headers.get("subject"),
         }
