@@ -26,6 +26,5 @@ class Email(BaseModel):
     def from_flat_data(cls, sender: str, recipient: str, subject: str) -> "Email":
         """Factory method for cleaner test initialization."""
         return cls(
-            envelope={"from": sender, "to": recipient},
-            headers={"subject": subject}
+            envelope={"from": sender, "to": recipient}, headers={"subject": subject}
         )
