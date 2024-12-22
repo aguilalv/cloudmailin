@@ -18,8 +18,7 @@ class HandlerRegistry:
         return self._registry.get(sender, DEFAULT_HANDLER)
 
 
-# Instantiate the global registry 
+# Instantiate the global registry
 # - The global registry is a shared singleton instance -
 # - That's fine for now. In the future it may be worh instantiating it in the app initialization
 handler_registry = HandlerRegistry()
-
