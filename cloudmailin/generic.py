@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from pydantic import ValidationError
+from pydantic import ValidationError 
 
 from cloudmailin.schemas import Email
 
@@ -23,6 +23,11 @@ def new_generic_email():
             ),
             200,
         )
-
     except ValidationError as e:
-        return jsonify({"error": e.errors()}), 400
+        # Handle structured Pydantic errors
+        return jsonify({"error": "Validation failed", "details": str(e)}), 400        
+
+    except Exception as e:
+        # Catch-all for unexpected errors
+        return jsonify({"error": "Internal Server Error"}), 500
+

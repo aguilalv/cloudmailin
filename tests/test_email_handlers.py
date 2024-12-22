@@ -9,6 +9,7 @@ def test_generic_handler_returns_email_unchanged():
         recipient="recipient@example.com",
         subject="Test Subject",
         date="Mon, 16 Jan 2012 17:00:01 +0000",
+        plain_body="Test Plain Body.",
     )
 
     # Act: Process the Email object with the generic handler
