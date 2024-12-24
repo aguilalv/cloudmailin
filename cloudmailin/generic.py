@@ -20,8 +20,8 @@ def new_generic_email():
                     "recipient": email.recipient,
                     "subject": email.subject,
                     "date": email.date,
-                    "plain": email.plain_body,
-                    "html": email.html_body,
+                    "plain": email.plain,
+                    "html": email.html,
                 }
             ),
             200,

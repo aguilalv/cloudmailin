@@ -17,10 +17,8 @@ def valid_nested_payload():
             "subject": "Test Subject",
             "date": "Mon, 16 Jan 2012 17:00:01 +0000",
         },
-        "body": {
-            "plain": "Test Plain Body.",
-            "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
-        },
+        "plain": "Test Plain Body.",
+        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
     }
 
 
@@ -34,8 +32,8 @@ def valid_flat_payload():
         "recipient": "recipient@example.com",
         "subject": "Test Subject",
         "date": "Mon, 16 Jan 2012 17:00:01 +0000",
-        "plain_body": "Test Plain Body.",
-        "html_body": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
+        "plain": "Test Plain Body.",
+        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
     }
 
 
@@ -53,8 +51,8 @@ def test_flatten_payload_valid_input(valid_nested_payload):
         "sender": "sender@example.com",
         "recipient": "recipient@example.com",
         "subject": "Test Subject",
-        "plain_body": "Test Plain Body.",
-        "html_body": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
+        "plain": "Test Plain Body.",
+        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
         "date": "Mon, 16 Jan 2012 17:00:01 +0000",
     }
 
@@ -67,8 +65,8 @@ def test_flatten_payload_valid_input(valid_nested_payload):
     [
         ("envelope.to", "recipient"),  # recipient maps to envelope.to
         ("headers.subject", "subject"),  # subject maps to headers.subject
-        ("body.plain", "plain_body"),  # plain_body maps to body.plain
-        ("body.html", "html_body"),  # html_body maps to body.html
+        ("plain", "plain"),  # plain maps to body.plain
+        ("html", "html"),  # html maps to body.html
         ("headers.date", "date"),  # date maps to headers.date
     ],
 )
@@ -118,9 +116,9 @@ def test_from_flat_data_creates_valid_email(valid_flat_payload):
     assert email.date == datetime.strptime(
         "Mon, 16 Jan 2012 17:00:01 +0000", "%a, %d %b %Y %H:%M:%S %z"
     )
-    assert email.plain_body == "Test Plain Body."
+    assert email.plain == "Test Plain Body."
     assert (
-        email.html_body
+        email.html
         == '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>'
     )
 
@@ -139,9 +137,9 @@ def test_preprocess_payload_valid_input(valid_nested_payload):
     assert result["sender"] == "sender@example.com"
     assert result["recipient"] == "recipient@example.com"
     assert result["subject"] == "Test Subject"
-    assert result["plain_body"] == "Test Plain Body."
+    assert result["plain"] == "Test Plain Body."
     assert (
-        result["html_body"]
+        result["html"]
         == '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>'
     )
     assert result["date"] == datetime.strptime(

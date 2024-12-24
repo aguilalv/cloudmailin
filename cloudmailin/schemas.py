@@ -10,11 +10,11 @@ class Email(BaseModel):
     )
     subject: str = Field(default=..., description="Subject line of the email")
     date: datetime = Field(default=..., description="Date the email was sent")
-    plain_body: Optional[str] = Field(
-        default=None, description="Body of the email in plain text format"
+    plain: str = Field(
+        default=..., description="Body of the email in plain text format"
     )
-    html_body: Optional[str] = Field(
-        default=None, description="Body of the email in html format"
+    html: str = Field(
+        default=..., description="Body of the email in html format"
     )
 
     @staticmethod
@@ -24,14 +24,13 @@ class Email(BaseModel):
 
         envelope = values.get("envelope", {})
         headers = values.get("headers", {})
-        body = values.get("body", {})
 
         return {
             "sender": envelope.get("from"),
             "recipient": envelope.get("to"),
             "subject": headers.get("subject"),
-            "plain_body": body.get("plain"),
-            "html_body": body.get("html"),
+            "plain": values.get("plain"),
+            "html": values.get("html"),
             "date": headers.get("date"),
         }
 
@@ -66,12 +65,13 @@ class Email(BaseModel):
         recipient: str,
         subject: str,
         date: str,
-        plain_body: str,
-        html_body: str,
+        plain: str,
+        html: str,
     ) -> "Email":
         """Factory method for cleaner test initialization."""
         return cls(
             envelope={"from": sender, "to": recipient},
             headers={"subject": subject, "date": date},
-            body={"plain": plain_body, "html": html_body},
+            plain = plain,
+            html = html
         )
