@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 from pydantic import BaseModel, EmailStr, model_validator, Field
 from datetime import datetime
 
@@ -10,8 +10,11 @@ class Email(BaseModel):
     )
     subject: str = Field(default=..., description="Subject line of the email")
     date: datetime = Field(default=..., description="Date the email was sent")
-    plain_body: str = Field(
-        default=..., description="Body of the email in plain text format"
+    plain_body: Optional[str] = Field(
+        default=None, description="Body of the email in plain text format"
+    )
+    html_body: Optional[str] = Field(
+        default=None, description="Body of the email in html format"
     )
 
     @staticmethod
@@ -28,6 +31,7 @@ class Email(BaseModel):
             "recipient": envelope.get("to"),
             "subject": headers.get("subject"),
             "plain_body": body.get("plain"),
+            "html_body": body.get("html"),
             "date": headers.get("date"),
         }
 
@@ -38,7 +42,7 @@ class Email(BaseModel):
         flattened = cls.flatten_payload(values)
 
         # Explicit check for required fields
-        required_fields = ("sender", "recipient", "subject", "date", "plain_body")
+        required_fields = ("sender", "recipient", "subject", "date")
         missing_fields = [
             field for field in required_fields if not flattened.get(field)
         ]
@@ -57,11 +61,17 @@ class Email(BaseModel):
 
     @classmethod
     def from_flat_data(
-        cls, sender: str, recipient: str, subject: str, date: str, plain_body: str
+        cls,
+        sender: str,
+        recipient: str,
+        subject: str,
+        date: str,
+        plain_body: str,
+        html_body: str,
     ) -> "Email":
         """Factory method for cleaner test initialization."""
         return cls(
             envelope={"from": sender, "to": recipient},
             headers={"subject": subject, "date": date},
-            body={"plain": plain_body},
+            body={"plain": plain_body, "html": html_body},
         )

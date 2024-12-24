@@ -27,7 +27,7 @@ def create_app(test_config=None):
     from . import db
 
     db.init_app(app)
-    
+
     # Setup logging before every request
     @app.before_request
     def log_incoming_request():

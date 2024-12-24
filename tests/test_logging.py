@@ -1,4 +1,3 @@
-
 import pytest
 from unittest.mock import patch
 from cloudmailin import create_app
@@ -8,6 +7,7 @@ from cloudmailin.logging_setup import JSONFormatter
 
 
 # --- Test Logging Initialization --- #
+
 
 def test_logging_initialization():
     """
@@ -20,6 +20,7 @@ def test_logging_initialization():
 
 # --- Test Incoming Request Logging --- #
 
+
 def test_logging_incoming_request(client):
     """
     Test that incoming requests are logged with method and path.
@@ -28,7 +29,9 @@ def test_logging_incoming_request(client):
         client.post("/generic/new", json={})
         mock_logger.assert_any_call("Received request: POST /generic/new")
 
+
 # --- Test Logging Json format --- #
+
 
 def test_json_logging_format(caplog):
     """
