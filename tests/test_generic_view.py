@@ -37,6 +37,8 @@ def test_generic_view_valid_payload(client, valid_email_data):
         "sender": "sender@example.com",
         "recipient": "recipient@example.com",
         "subject": "Test Subject",
+        "date": "Mon, 16 Jan 2012 17:00:01 GMT",
+        "plain": "Test Plain Body."
     }
 
 
