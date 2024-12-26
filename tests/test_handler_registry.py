@@ -1,5 +1,5 @@
 from cloudmailin.handler_registry import handler_registry
-from cloudmailin.email_handlers import EmailHandler
+from cloudmailin.email_handlers import BaseHandler
 
 
 def test_handler_registry_defaults_to_generic_handler():
@@ -10,4 +10,4 @@ def test_handler_registry_defaults_to_generic_handler():
     handler_class = handler_registry.get_handler_for_sender(sender)
 
     # Assert: Ensure it defaults to the GenericHandler
-    assert handler_class == EmailHandler
+    assert handler_class == BaseHandler

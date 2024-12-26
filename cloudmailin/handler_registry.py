@@ -1,6 +1,6 @@
-from cloudmailin.email_handlers import EmailHandler
+from cloudmailin.email_handlers import BaseHandler
 
-DEFAULT_HANDLER = EmailHandler
+DEFAULT_HANDLER = BaseHandler
 
 
 class HandlerRegistry:
