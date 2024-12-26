@@ -3,38 +3,6 @@ from datetime import datetime
 from cloudmailin.schemas import Email
 
 
-# --- Shared Fixtures --- #
-
-
-@pytest.fixture
-def valid_nested_payload():
-    """
-    Provides a valid nested email payload for testing flatten_payload and preprocess_payload.
-    """
-    return {
-        "envelope": {"from": "sender@example.com", "to": "recipient@example.com"},
-        "headers": {
-            "subject": "Test Subject",
-            "date": "Mon, 16 Jan 2012 17:00:01 +0000",
-        },
-        "plain": "Test Plain Body.",
-        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
-    }
-
-
-@pytest.fixture
-def valid_flat_payload():
-    """
-    Provides a valid flat email payload for testing from_flat_data.
-    """
-    return {
-        "sender": "sender@example.com",
-        "recipient": "recipient@example.com",
-        "subject": "Test Subject",
-        "date": "Mon, 16 Jan 2012 17:00:01 +0000",
-        "plain": "Test Plain Body.",
-        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
-    }
 
 
 # --- Static Method Tests: flatten_payload --- #
