@@ -1,7 +1,7 @@
 
 import pytest
 from unittest.mock import patch, call
-from cloudmailin.email_handlers import BaseHandler
+from cloudmailin.handlers.base_handler import BaseHandler
 from cloudmailin.schemas import Email
 
 def test_base_handler_logs_health_message(valid_flat_payload, app):

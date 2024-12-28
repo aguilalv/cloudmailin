@@ -1,5 +1,5 @@
 from cloudmailin.handler_registry import handler_registry
-from cloudmailin.email_handlers import BaseHandler
+from cloudmailin.handlers.base_handler import BaseHandler
 
 
 def test_handler_registry_defaults_to_generic_handler():

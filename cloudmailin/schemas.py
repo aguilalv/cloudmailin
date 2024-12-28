@@ -16,6 +16,7 @@ class Email(BaseModel):
     html: str = Field(
         default=..., description="Body of the email in html format"
     )
+    campaign_type: Optional[str] = Field(None, description="Type of campaign")
 
     @staticmethod
     def flatten_payload(values: dict) -> dict:
