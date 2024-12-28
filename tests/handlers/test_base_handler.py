@@ -83,5 +83,3 @@ def test_base_handler_stores_final_email_model(app, valid_flat_payload):
 
 # --- Edge cases --- #
 
-# Test behaviour when no steps added
-

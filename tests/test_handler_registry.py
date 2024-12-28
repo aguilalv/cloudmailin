@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import Mock
 
 from cloudmailin.handler_registry import HandlerRegistry
@@ -20,12 +21,17 @@ def test_handler_registry_register_and_retrieve():
     Test that handlers can be registered and retrieved correctly from the registry.
     """
 
+    #Define a Mock handler class with a handle method to comply with the expected contract
+    class MockHandler:
+        def handle(self, email):
+            return email
+    
     registry = HandlerRegistry()
-    mock_handler = Mock()
+    mock_handler = MockHandler()
     registry.register("sender@example.com", mock_handler.__class__)
 
     handler = registry.get_handler_for_sender("sender@example.com")
-    assert handler == mock_handler.__class__
+    assert handler == MockHandler
 
 
 def test_handler_registry_defaults_to_generic_handler():
@@ -41,4 +47,15 @@ def test_handler_registry_defaults_to_generic_handler():
 
 # --- Edge cases --- #
 
-# Test trying to register an invalid handler 
+@pytest.mark.parametrize(
+    "invalid_handler", 
+    [None, 123, "not_a_class", [], {}]
+)
+def test_handler_registry_rejects_invalid_handler(invalid_handler):
+    """
+    Test that the handler registry rejects invalid handler classes.
+    """
+    registry = HandlerRegistry()
+
+    with pytest.raises(ValueError, match="Handler must be a class"):
+        registry.register("sender@example.com", invalid_handler)
