@@ -5,12 +5,20 @@ from cloudmailin.schemas import Email
 from cloudmailin.handlers.campaign_classifier import CampaignClassifierHandler
 from cloudmailin.handlers.steps import assign_campaign_type
 
+# --- Test handler-specific: Test handle is made of the right steps --- #
+
 def test_campaign_classifier_handler_has_correct_steps():
     """
     Test that CampaignClassifierHandler includes only the assign_campaign_type step.
     """
     handler = CampaignClassifierHandler()
     assert handler.steps == [assign_campaign_type], "Handler should include only the assign_campaign_type step"
+
+# --- Test edge cases --- #
+
+# Test malformed or incomplete email data --- #
+
+# --- Test Handler integration --- #
 
 @pytest.mark.parametrize(
     "field, value, expected_campaign_type",

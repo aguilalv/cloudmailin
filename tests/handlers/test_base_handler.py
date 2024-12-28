@@ -4,6 +4,8 @@ from unittest.mock import patch, call
 from cloudmailin.handlers.base_handler import BaseHandler
 from cloudmailin.schemas import Email
 
+# --- Test logging behaviour --- #
+
 def test_base_handler_logs_health_message(valid_flat_payload, app):
     """
     Test that BaseHandler logs a health-related message when handling an email.
@@ -15,6 +17,7 @@ def test_base_handler_logs_health_message(valid_flat_payload, app):
         handler.handle(email)
         mock_logger.assert_any_call("Processing email from sender@example.com")
 
+# --- Test basic operations and step execution --- #
 
 def test_base_handler_executes_steps_in_order(valid_flat_payload, app):
     """
@@ -77,3 +80,8 @@ def test_base_handler_stores_final_email_model(app, valid_flat_payload):
     storage_call = [call for call in mock_logger.call_args_list if "store in database" in call.args[0]]
     assert storage_call, "Expected a storage log call but none was found."
     assert expected_final_subject in storage_call[0].args[0], "Storage log did not include the final email subject."
+
+# --- Edge cases --- #
+
+# Test behaviour when no steps added
+

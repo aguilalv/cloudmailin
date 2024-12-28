@@ -2,7 +2,7 @@ import pytest
 from cloudmailin.schemas import Email
 from cloudmailin.handlers.steps import assign_campaign_type
 
-# --- Step-Specific Tests: assign_campaign_type --- #
+# --- Test step-specific logic: assign_campaign_type --- #
 
 def test_assign_campaign_type_with_matching_subject(valid_flat_payload):
     """
@@ -29,6 +29,7 @@ def test_assign_campaign_type_with_no_match(valid_flat_payload):
 
     assert result.campaign_type == "unclassified"
 
+# --- Test Field Integrity --- #
 
 def test_assign_campaign_type_does_not_modify_unrelated_fields(valid_flat_payload):
     """
@@ -48,3 +49,6 @@ def test_assign_campaign_type_does_not_modify_unrelated_fields(valid_flat_payloa
         if field != "campaign_type":
             assert getattr(result, field) == getattr(original_email, field), f"Field '{field}' was unexpectedly modified"
 
+# --- Test edge cases --- #
+
+# Test empty subject or subject with special characters (Parametric)

@@ -17,8 +17,3 @@ class HandlerRegistry:
         """Fetch the handler for a sender, falling back to the default handler."""
         return self._registry.get(sender, DEFAULT_HANDLER)
 
-
-# Instantiate the global registry
-# - The global registry is a shared singleton instance -
-# - That's fine for now. In the future it may be worh instantiating it in the app initialization
-handler_registry = HandlerRegistry()

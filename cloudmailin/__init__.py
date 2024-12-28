@@ -2,6 +2,7 @@ import os
 import logging
 from flask import Flask, request
 
+from cloudmailin.handler_registry import HandlerRegistry
 
 def create_app(test_config=None):
     from .logging_setup import configure_logging  # Import the logging setup
@@ -22,6 +23,9 @@ def create_app(test_config=None):
         app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
+
+    # Initialize and add handler registry to the app
+    app.config['handler_registry'] = HandlerRegistry()
 
     # Initialize Database
     from . import db

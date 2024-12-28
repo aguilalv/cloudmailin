@@ -1,5 +1,8 @@
 import pytest
+from flask import current_app
 
+from cloudmailin import create_app
+from cloudmailin.handler_registry import HandlerRegistry
 
 # --- Shared Fixture for Valid Email Data --- #
 
@@ -18,6 +21,17 @@ def valid_email_data():
         "plain": "Test Plain Body.",
         "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
     }
+
+
+# --- Handler Registry Accesibility Tests --- #
+def test_access_handler_registry_in_view():
+    """
+    Test that the handler registry can be accessed via app context.
+    """
+    app = create_app()
+    with app.app_context():
+        registry = current_app.config['handler_registry']
+        assert isinstance(registry, HandlerRegistry)
 
 
 # --- Valid Request Tests --- #
