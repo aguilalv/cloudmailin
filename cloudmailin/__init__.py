@@ -8,7 +8,7 @@ def create_app(test_config=None):
     # Late import to ensure the function is patched correctly in tests.
     # This follows Flask's pattern of initializing dependencies dynamically within create_app,
     # and avoids module-level imports that can cause issues with testing and state management.
-    from .config_loader import initialize_handler_registry_from_config
+    from .handler_registry import initialize_handler_registry_from_config
 
     from .logging_setup import configure_logging  # Import the logging setup
 

@@ -12,7 +12,7 @@ def test_create_app_initializes_handler_registry_correctly():
     mock_registry = HandlerRegistry()
 
     # Patch the reference in __init__.py
-    with patch("cloudmailin.config_loader.initialize_handler_registry_from_config") as mock_init:
+    with patch("cloudmailin.handler_registry.initialize_handler_registry_from_config") as mock_init:
         mock_init.return_value = mock_registry
 
         # Create the app
