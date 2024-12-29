@@ -13,9 +13,7 @@ class Email(BaseModel):
     plain: str = Field(
         default=..., description="Body of the email in plain text format"
     )
-    html: str = Field(
-        default=..., description="Body of the email in html format"
-    )
+    html: str = Field(default=..., description="Body of the email in html format")
     campaign_type: Optional[str] = Field(None, description="Type of campaign")
 
     @staticmethod
@@ -73,6 +71,6 @@ class Email(BaseModel):
         return cls(
             envelope={"from": sender, "to": recipient},
             headers={"subject": subject, "date": date},
-            plain = plain,
-            html = html
+            plain=plain,
+            html=html,
         )

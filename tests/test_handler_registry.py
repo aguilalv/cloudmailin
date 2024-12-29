@@ -1,36 +1,45 @@
 import pytest
 from unittest.mock import Mock, patch, mock_open
-#import builtins
+
+# import builtins
 import yaml
 
 from cloudmailin import create_app
 from cloudmailin.handler_registry import HandlerRegistry
 from cloudmailin.handlers.base_handler import BaseHandler
 
-from cloudmailin.handler_registry import HandlerRegistry, HANDLERS_MAP, load_config, initialize_handler_registry_from_config
+from cloudmailin.handler_registry import (
+    HandlerRegistry,
+    HANDLERS_MAP,
+    load_config,
+    initialize_handler_registry_from_config,
+)
 
 # --- Test Initialization and Integration with app context --- #
+
 
 def test_app_initializes_with_handler_registry(app):
     """
     Test that the app initializes with a handler registry in its config.
     """
-    assert 'handler_registry' in app.config
-    assert app.config['handler_registry'] is not None
-    assert isinstance(app.config['handler_registry'], HandlerRegistry)
+    assert "handler_registry" in app.config
+    assert app.config["handler_registry"] is not None
+    assert isinstance(app.config["handler_registry"], HandlerRegistry)
+
 
 # --- Test handler registration and retrieval --- #
+
 
 def test_handler_registry_register_and_retrieve():
     """
     Test that handlers can be registered and retrieved correctly from the registry.
     """
 
-    #Define a Mock handler class with a handle method to comply with the expected contract
+    # Define a Mock handler class with a handle method to comply with the expected contract
     class MockHandler:
         def handle(self, email):
             return email
-    
+
     registry = HandlerRegistry()
     mock_handler = MockHandler()
     registry.register("sender@example.com", mock_handler.__class__)
@@ -43,19 +52,18 @@ def test_handler_registry_defaults_to_generic_handler():
     # Arrange: A sender not mapped to a specific handler
     handler_registry = HandlerRegistry()
     sender = "unknown@example.com"
-    
+
     # Act: Fetch the handler from the registry
     handler_class = handler_registry.get_handler_for_sender(sender)
 
     # Assert: Ensure it defaults to the GenericHandler
     assert handler_class == BaseHandler
 
+
 # --- Edge cases --- #
 
-@pytest.mark.parametrize(
-    "invalid_handler", 
-    [None, 123, "not_a_class", [], {}]
-)
+
+@pytest.mark.parametrize("invalid_handler", [None, 123, "not_a_class", [], {}])
 def test_handler_registry_rejects_invalid_handler(invalid_handler):
     """
     Test that the handler registry rejects invalid handler classes.
@@ -65,7 +73,9 @@ def test_handler_registry_rejects_invalid_handler(invalid_handler):
     with pytest.raises(ValueError, match="Handler must be a class"):
         registry.register("sender@example.com", invalid_handler)
 
+
 # --- Tests valid configuration file parsed correctly --- #
+
 
 def test_valid_yaml_config_has_expected_keys(valid_yaml_config):
     """
@@ -76,9 +86,16 @@ def test_valid_yaml_config_has_expected_keys(valid_yaml_config):
     with patch("builtins.open", mock_open(read_data=valid_yaml_config)):
         config = load_config("dummy_path.yaml")
         assert "handlers" in config, "Top-level 'handlers' key is missing"
-        assert "CampaignClassifierHandler" in config["handlers"], "'CampaignClassifierHandler' key is missing"
-        assert "steps" in config["handlers"]["CampaignClassifierHandler"], "'steps' key is missing"
-        assert "senders" in config["handlers"]["CampaignClassifierHandler"], "'senders' key is missing"
+        assert (
+            "CampaignClassifierHandler" in config["handlers"]
+        ), "'CampaignClassifierHandler' key is missing"
+        assert (
+            "steps" in config["handlers"]["CampaignClassifierHandler"]
+        ), "'steps' key is missing"
+        assert (
+            "senders" in config["handlers"]["CampaignClassifierHandler"]
+        ), "'senders' key is missing"
+
 
 def test_valid_yaml_config_parses_steps(valid_yaml_config):
     """
@@ -89,6 +106,7 @@ def test_valid_yaml_config_parses_steps(valid_yaml_config):
         steps = config["handlers"]["CampaignClassifierHandler"]["steps"]
         assert steps == ["cloudmailin.handlers.steps.assign_campaign_type"]
 
+
 def test_valid_yaml_config_parses_senders(valid_yaml_config):
     """
     Test that the senders in a valid YAML configuration are correctly parsed.
@@ -98,7 +116,9 @@ def test_valid_yaml_config_parses_senders(valid_yaml_config):
         senders = config["handlers"]["CampaignClassifierHandler"]["senders"]
         assert senders == ["newsletter@example.com", "promo@example.com"]
 
+
 # --- Test Invalid Configurations --- #
+
 
 @pytest.mark.parametrize(
     "invalid_part, modification",
@@ -136,6 +156,7 @@ def test_load_invalid_yaml_configs(valid_yaml_config, invalid_part, modification
         with pytest.raises(ValueError):
             load_config("dummy_path.yaml")
 
+
 # --- Test config initialization --- #
 
 
@@ -149,5 +170,11 @@ def test_initialize_handler_registry_from_config(valid_yaml_config, app):
         assert isinstance(registry, HandlerRegistry)
         assert "newsletter@example.com" in registry._registry
         assert "promo@example.com" in registry._registry
-        assert registry.get_handler_for_sender("newsletter@example.com") == HANDLERS_MAP["CampaignClassifierHandler"]
-        assert registry.get_handler_for_sender("promo@example.com") == HANDLERS_MAP["CampaignClassifierHandler"]
+        assert (
+            registry.get_handler_for_sender("newsletter@example.com")
+            == HANDLERS_MAP["CampaignClassifierHandler"]
+        )
+        assert (
+            registry.get_handler_for_sender("promo@example.com")
+            == HANDLERS_MAP["CampaignClassifierHandler"]
+        )

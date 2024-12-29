@@ -30,8 +30,10 @@ class HandlerRegistry:
         """
         if not isinstance(handler_class, type):
             raise ValueError("Handler must be a class")
-        
-        if not hasattr(handler_class, 'handle') or not callable(getattr(handler_class, 'handle')):
+
+        if not hasattr(handler_class, "handle") or not callable(
+            getattr(handler_class, "handle")
+        ):
             raise ValueError("Handler class must have a callable 'handle' method")
 
         self._registry[sender] = handler_class
@@ -72,15 +74,22 @@ def load_config(path: str) -> dict:
     # Validate each handler
     for handler, details in config["handlers"].items():
         if not isinstance(details, dict):
-            raise ValueError(f"Invalid configuration: Handler '{handler}' must map to a dictionary.")
+            raise ValueError(
+                f"Invalid configuration: Handler '{handler}' must map to a dictionary."
+            )
 
         if "steps" not in details or not isinstance(details["steps"], list):
-            raise ValueError(f"Invalid configuration: Handler '{handler}' must have a 'steps' list.")
+            raise ValueError(
+                f"Invalid configuration: Handler '{handler}' must have a 'steps' list."
+            )
 
         if "senders" not in details or not isinstance(details["senders"], list):
-            raise ValueError(f"Invalid configuration: Handler '{handler}' must have a 'senders' list.")
+            raise ValueError(
+                f"Invalid configuration: Handler '{handler}' must have a 'senders' list."
+            )
 
     return config
+
 
 def initialize_handler_registry_from_config(config_file: str) -> HandlerRegistry:
     """

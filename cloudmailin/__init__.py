@@ -4,6 +4,7 @@ from flask import Flask, request
 
 from cloudmailin.handler_registry import HANDLERS_MAP, HandlerRegistry
 
+
 def create_app(test_config=None):
     # Late import to ensure the function is patched correctly in tests.
     # This follows Flask's pattern of initializing dependencies dynamically within create_app,
@@ -31,11 +32,13 @@ def create_app(test_config=None):
 
     # Initialize and add handler registry to the app
     config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")
-   
+
     print(config_path)
     print(initialize_handler_registry_from_config)
-    
-    app.config["handler_registry"] = initialize_handler_registry_from_config(config_path)
+
+    app.config["handler_registry"] = initialize_handler_registry_from_config(
+        config_path
+    )
 
     # Initialize Database
     from . import db
@@ -56,5 +59,3 @@ def create_app(test_config=None):
     app.register_blueprint(generic.bp)
 
     return app
-
-

@@ -30,7 +30,7 @@ def test_access_handler_registry_in_view():
     """
     app = create_app()
     with app.app_context():
-        registry = current_app.config['handler_registry']
+        registry = current_app.config["handler_registry"]
         assert isinstance(registry, HandlerRegistry)
 
 

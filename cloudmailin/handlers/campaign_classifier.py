@@ -6,4 +6,5 @@ class CampaignClassifierHandler(BaseHandler):
     """
     A specialized handler that classifies emails into campaign types.
     """
+
     steps = [assign_campaign_type]

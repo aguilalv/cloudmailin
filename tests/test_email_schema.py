@@ -3,8 +3,6 @@ from datetime import datetime
 from cloudmailin.schemas import Email
 
 
-
-
 # --- Static Method Tests: flatten_payload --- #
 
 

@@ -30,6 +30,7 @@ def client(app):
 def runner(app):
     return app.test_cli_runner()
 
+
 # --- Data Fixtures --- #
 
 
@@ -63,14 +64,17 @@ def valid_flat_payload():
         "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
     }
 
+
 # --- Fixture: Valid Handlers and Steps Configuration --- #
+
 
 @pytest.fixture
 def valid_yaml_config():
     """
     Provides a valid YAML configuration for handlers and steps.
     """
-    return textwrap.dedent("""
+    return textwrap.dedent(
+        """
     handlers:
       CampaignClassifierHandler:
         steps:
@@ -78,4 +82,5 @@ def valid_yaml_config():
         senders:
           - "newsletter@example.com"
           - "promo@example.com"
-    """)
+    """
+    )

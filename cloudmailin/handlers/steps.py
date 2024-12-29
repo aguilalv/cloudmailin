@@ -7,8 +7,8 @@ def assign_campaign_type(email: Email) -> Email:
     """
     if "sale" in email.subject.lower():
         campaign_type = "promotion"
-#    elif "newsletter" in email.subject.lower():
-#        campaign_type = "newsletter"
+    #    elif "newsletter" in email.subject.lower():
+    #        campaign_type = "newsletter"
     else:
         campaign_type = "unclassified"
 
