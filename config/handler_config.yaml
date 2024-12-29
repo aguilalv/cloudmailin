@@ -1,0 +1,7 @@
+handlers:
+  CampaignClassifierHandler:
+    steps:
+      - cloudmailin.handlers.steps.assign_campaign_type
+    senders:
+      - "newsletter@example.com"
+      - "promo@example.com"

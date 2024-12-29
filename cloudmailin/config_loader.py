@@ -1,52 +1,6 @@
 import yaml
 
-from cloudmailin.handlers.base_handler import BaseHandler
-from cloudmailin.handlers.campaign_classifier import CampaignClassifierHandler
-
-DEFAULT_HANDLER = BaseHandler
-
-HANDLERS_MAP = {
-    "BaseHandler": BaseHandler,
-    "CampaignClassifierHandler": CampaignClassifierHandler,
-}
-
-
-class HandlerRegistry:
-    """Registry for mapping email senders to handlers."""
-
-    def __init__(self):
-        self._registry = {}
-
-    def register(self, sender: str, handler_class):
-        """
-        Register a handler for a specific sender.
-
-        Args:
-            sender (str): The email sender address.
-            handler_class (type): The handler class to register.
-
-        Raises:
-            ValueError: If handler_class is not a valid class or lacks a handle method.
-        """
-        if not isinstance(handler_class, type):
-            raise ValueError("Handler must be a class")
-        
-        if not hasattr(handler_class, 'handle') or not callable(getattr(handler_class, 'handle')):
-            raise ValueError("Handler class must have a callable 'handle' method")
-
-        self._registry[sender] = handler_class
-
-    def get_handler_for_sender(self, sender: str):
-        """
-        Fetch the handler for a sender, falling back to the default handler.
-
-        Args:
-            sender (str): The email sender address.
-
-        Returns:
-            type: The handler class for the sender.
-        """
-        return self._registry.get(sender, DEFAULT_HANDLER)
+from cloudmailin.handler_registry import HANDLERS_MAP, HandlerRegistry
 
 
 def load_config(path: str) -> dict:
@@ -105,3 +59,4 @@ def initialize_handler_registry_from_config(config_file: str) -> HandlerRegistry
             registry.register(sender, handler_class)
 
     return registry
+

@@ -2,9 +2,14 @@ import os
 import logging
 from flask import Flask, request
 
-from cloudmailin.handler_registry import HandlerRegistry
+from cloudmailin.handler_registry import HANDLERS_MAP, HandlerRegistry
 
 def create_app(test_config=None):
+    # Late import to ensure the function is patched correctly in tests.
+    # This follows Flask's pattern of initializing dependencies dynamically within create_app,
+    # and avoids module-level imports that can cause issues with testing and state management.
+    from .config_loader import initialize_handler_registry_from_config
+
     from .logging_setup import configure_logging  # Import the logging setup
 
     # Create the app
@@ -25,7 +30,12 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Initialize and add handler registry to the app
-    app.config['handler_registry'] = HandlerRegistry()
+    config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")
+   
+    print(config_path)
+    print(initialize_handler_registry_from_config)
+    
+    app.config["handler_registry"] = initialize_handler_registry_from_config(config_path)
 
     # Initialize Database
     from . import db
@@ -46,3 +56,5 @@ def create_app(test_config=None):
     app.register_blueprint(generic.bp)
 
     return app
+
+

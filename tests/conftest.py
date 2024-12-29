@@ -2,6 +2,9 @@
 # import tempfile
 
 import pytest
+import yaml
+import textwrap
+
 from cloudmailin import create_app
 from cloudmailin.db import get_db, init_db
 
@@ -59,3 +62,20 @@ def valid_flat_payload():
         "plain": "Test Plain Body.",
         "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
     }
+
+# --- Fixture: Valid Handlers and Steps Configuration --- #
+
+@pytest.fixture
+def valid_yaml_config():
+    """
+    Provides a valid YAML configuration for handlers and steps.
+    """
+    return textwrap.dedent("""
+    handlers:
+      CampaignClassifierHandler:
+        steps:
+          - cloudmailin.handlers.steps.assign_campaign_type
+        senders:
+          - "newsletter@example.com"
+          - "promo@example.com"
+    """)
