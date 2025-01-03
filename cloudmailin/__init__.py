@@ -33,9 +33,6 @@ def create_app(test_config=None):
     # Initialize and add handler registry to the app
     config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")
 
-    print(config_path)
-    print(initialize_handler_registry_from_config)
-
     app.config["handler_registry"] = initialize_handler_registry_from_config(
         config_path
     )

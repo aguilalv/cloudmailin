@@ -21,7 +21,7 @@ class BaseHandler:
         Handle an email object: Log a health-related message, apply all steps in sequence and Store in the database.
         """
         # Step 1: Log app health check message
-        current_app.logger.info(f"Processing email from {email.sender}")
+        current_app.logger.info(f"[{self.__class__.__name__}] Processing email from {email.sender}")
 
         # Pass the email model through each step
         for step in self.steps:

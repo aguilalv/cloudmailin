@@ -65,6 +65,25 @@ def valid_flat_payload():
     }
 
 
+# --- Shared Fixture for Valid Email Data --- #
+
+
+@pytest.fixture
+def valid_email_data():
+    """
+    Provides a valid generic email payload for tests.
+    """
+    return {
+        "envelope": {"from": "sender@example.com", "to": "recipient@example.com"},
+        "headers": {
+            "subject": "Test Subject",
+            "date": "Mon, 16 Jan 2012 17:00:01 +0000",
+        },
+        "plain": "Test Plain Body.",
+        "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
+    }
+
+
 # --- Fixture: Valid Handlers and Steps Configuration --- #
 
 
