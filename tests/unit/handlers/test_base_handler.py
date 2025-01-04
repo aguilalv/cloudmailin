@@ -5,6 +5,7 @@ from cloudmailin.schemas import Email
 
 # --- Test logging behaviour --- #
 
+
 def test_base_handler_logs_health_message(valid_flat_payload, app):
     """
     Test that BaseHandler logs a health-related message when handling an email.
@@ -14,7 +15,9 @@ def test_base_handler_logs_health_message(valid_flat_payload, app):
 
     with patch.object(app.logger, "info") as mock_logger:
         handler.handle(email)
-        expected_message = f"[{handler.__class__.__name__}] Processing email from sender@example.com"
+        expected_message = (
+            f"[{handler.__class__.__name__}] Processing email from sender@example.com"
+        )
         mock_logger.assert_any_call(expected_message)
 
 

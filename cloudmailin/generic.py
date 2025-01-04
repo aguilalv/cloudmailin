@@ -13,7 +13,7 @@ def new_generic_email():
     try:
         data_received = request.get_json()
         email = Email(**data_received)
-    
+
         # Step 1: Retrieve the handler registry from the app context
         handler_registry = current_app.config.get("handler_registry")
         if not handler_registry:
@@ -22,7 +22,6 @@ def new_generic_email():
         # Step 2: Retrieve the appropriate handler
         handler_class = handler_registry.get_handler_for_sender(email.sender)
         handler = handler_class()
-
 
         # Step 3: Process the email using the handler
         handler.handle(email)
