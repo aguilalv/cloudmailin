@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.10]
+        python-version: [3.12.8]
 
     steps:
       # 1. Checkout the code
