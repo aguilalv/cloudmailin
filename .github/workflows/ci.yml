@@ -46,13 +46,15 @@ jobs:
       - name: Run unit tests
         run: pytest --cov=cloudmailin --cov-report=xml --ignore=tests/functional
 
+      # 7. 📊 Upload Test Results
       - name: 📊 Upload Test Results
-          if: always()
-          uses: actions/upload-artifact@v4
-          with:
-            name: test-results
-            path: ./test-results/
-  
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ./test-results/
+
+      # 8. 📊 Upload Coverage Reports
       - name: 📊 Upload Coverage Reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,18 +62,19 @@ jobs:
           name: coverage-reports
           path: ./coverage/
 
-      # 7. Run functional tests
+      # 9. Run functional tests
       - name: Run functional tests
         run: pytest tests/functional
 
-      # 8. Upload coverage report
+      # 10. 📊 Upload coverage to GitHub
       - name: Upload coverage to GitHub
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
 
-      # 9. Enforce coverage thresholds
+      # 11. Enforce coverage thresholds
       - name: Check coverage thresholds
         run: |
           COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(ET.parse('coverage.xml').getroot().attrib['line-rate'])")
@@ -79,5 +82,4 @@ jobs:
             echo "Test coverage ($COVERAGE) is below the required threshold (90%)"
             exit 1
           fi
-
 
