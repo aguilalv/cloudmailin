@@ -85,8 +85,16 @@ jobs:
         if: always()
         run: |
           echo "## 📊 Test Report Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ **Unit Tests Passed:** $(pytest --collect-only --ignore=tests/functional | grep 'collected' | awk '{print $2}')" >> $GITHUB_STEP_SUMMARY
-          echo "- 📈 **Coverage:** $(python -c 'import xml.etree.ElementTree as ET; print(f"{float(ET.parse(\"reports/coverage.xml\").getroot().attrib[\"line-rate\"])*100:.2f}")')%" >> $GITHUB_STEP_SUMMARY
+          
+          # Count Unit Tests
+          UNIT_TEST_COUNT=$(pytest --collect-only --ignore=tests/functional | grep 'collected' | awk '{print $2}')
+          echo "- ✅ **Unit Tests Collected:** $UNIT_TEST_COUNT" >> $GITHUB_STEP_SUMMARY
+          
+          # Coverage Percentage
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(f'{float(ET.parse(\"reports/coverage.xml\").getroot().attrib[\"line-rate\"])*100:.2f}')")
+          echo "- 📈 **Coverage:** $COVERAGE%" >> $GITHUB_STEP_SUMMARY
+          
+          # Links to Reports
           echo "- 📝 **[View Allure Report](https://<username>.github.io/<repo>/allure-report/index.html)**" >> $GITHUB_STEP_SUMMARY
           echo "- 📝 **[View Coverage Report](https://<username>.github.io/<repo>/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
 
