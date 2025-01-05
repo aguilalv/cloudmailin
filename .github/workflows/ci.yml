@@ -67,7 +67,8 @@ jobs:
           mkdir -p gh-pages
           cp reports/unit-tests-report.html gh-pages/unit-tests-report.html
           cp reports/functional-tests-report.html gh-pages/functional-tests-report.html
-          cp -r reports/coverage gh-pages/coverage
+          mkdir -p gh-pages/coverage
+          cp -r reports/coverage/* gh-pages/coverage
           echo '<!DOCTYPE html>
           <html lang="en">
           <head>
