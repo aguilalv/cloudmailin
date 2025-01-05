@@ -95,13 +95,12 @@ jobs:
           echo "- 📝 **Detailed reports available on GitHub Pages and as artifacts.**" >> $GITHUB_STEP_SUMMARY
 
       # 13. Publish Reports to GitHub Pages
-#      - name: 📢 Publish Reports to GitHub Pages
-#        if: always()
-#        uses: peaceiris/actions-gh-pages@v3
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          publish_dir: ./test-results
-#          destination_dir: test-results
+      - name: 📢 Publish Reports to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
 
       # 14. Final Status Notification
       - name: 📬 Notify CI Status
