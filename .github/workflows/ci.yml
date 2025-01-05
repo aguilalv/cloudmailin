@@ -32,7 +32,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install flake8 black pytest pytest-cov
+          pip install flake8 black pytest pytest-cov pytest-html
 
       # 4. Run flake8 linting
       #- name: Run flake8
@@ -44,42 +44,69 @@ jobs:
 
       # 6. Run unit tests with coverage
       - name: Run unit tests
-        run: pytest --cov=cloudmailin --cov-report=xml --ignore=tests/functional
+        run: pytest --cov=cloudmailin --cov-report=xml --cov-report=html:coverage/html --junitxml=test-results/unit-tests.xml --ignore=tests/functional
 
-      # 7. 📊 Upload Test Results
-      - name: 📊 Upload Test Results
+      # 7. Upload Unit Test Results
+      - name: 📊 Upload Unit Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: ./test-results/
+          name: unit-test-results
+          path: ./test-results/unit-tests.xml
 
-      # 8. 📊 Upload Coverage Reports
+      # 8. Upload Coverage Reports
       - name: 📊 Upload Coverage Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
-          path: ./coverage/
+          path: ./coverage/html/
 
       # 9. Run functional tests
       - name: Run functional tests
-        run: pytest tests/functional
+        run: pytest tests/functional --junitxml=test-results/functional-tests.xml --html=test-results/functional-tests-report.html
 
-      # 10. 📊 Upload coverage to GitHub
-      - name: Upload coverage to GitHub
+      # 10. Upload Functional Test Results
+      - name: 📊 Upload Functional Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage.xml
+          name: functional-test-results
+          path: ./test-results/functional-tests-report.html
 
-      # 11. Enforce coverage thresholds
+      # 11. Enforce Coverage Thresholds
       - name: Check coverage thresholds
         run: |
-          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(ET.parse('coverage.xml').getroot().attrib['line-rate'])")
-          if (( $(echo "$COVERAGE < 0.90" | bc -l) )); then
-            echo "Test coverage ($COVERAGE) is below the required threshold (90%)"
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(float(ET.parse('coverage.xml').getroot().attrib['line-rate'])*100))")
+          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
+            echo "Test coverage ($COVERAGE%) is below the required threshold (90%)."
             exit 1
           fi
 
+      # 12. Generate GitHub Actions Summary
+      - name: 📄 Add Test Report Summary
+        if: always()
+        run: |
+          echo "## 📊 Test Report Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Unit Tests Passed:** $(pytest --count)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📈 **Coverage:** $(python -c 'import xml.etree.ElementTree as ET; print(float(ET.parse("coverage.xml").getroot().attrib["line-rate"])*100)')%" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **Detailed reports available on GitHub Pages and as artifacts.**" >> $GITHUB_STEP_SUMMARY
+
+      # 13. Publish Reports to GitHub Pages
+      - name: 📢 Publish Reports to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./test-results
+          destination_dir: test-results
+
+      # 14. Final Status Notification
+      - name: 📬 Notify CI Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ CI Pipeline completed successfully!"
+          else
+            echo "❌ CI Pipeline encountered errors!"
+          fi

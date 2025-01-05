@@ -30,6 +30,9 @@ pydantic_core==2.27.2
 Pygments==2.18.0
 pylint==3.3.2
 pytest==8.3.4
+pytest-cov==6.0.0
+pytest-html==4.1.1
+pytest-metadata==3.1.1
 PyYAML==6.0.2
 tomlkit==0.13.2
 typing_extensions==4.12.2
