@@ -1,6 +1,9 @@
+allure-pytest==2.13.5
+allure-python-commons==2.13.5
 annotated-types==0.7.0
 astroid==3.3.6
 asttokens==3.0.0
+attrs==24.3.0
 black==24.10.0
 blinker==1.9.0
 click==8.1.7
