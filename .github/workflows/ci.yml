@@ -77,11 +77,13 @@ jobs:
       # 11. Enforce Coverage Thresholds
       - name: Check coverage thresholds
         run: |
-          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(float(ET.parse('coverage.xml').getroot().attrib['line-rate'])*100))")
-          if (( $(echo "$COVERAGE < 90" | bc -l) )); then
-            echo "Test coverage ($COVERAGE%) is below the required threshold (90%)."
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(float(ET.parse('coverage.xml').getroot().attrib['line-rate']) * 100)")
+          echo "Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 90.0" | bc -l) )); then
+            echo "Test coverage ($COVERAGE%) is below the required threshold (90%)"
             exit 1
           fi
+
 
       # 12. Generate GitHub Actions Summary
       - name: 📄 Add Test Report Summary
@@ -93,13 +95,13 @@ jobs:
           echo "- 📝 **Detailed reports available on GitHub Pages and as artifacts.**" >> $GITHUB_STEP_SUMMARY
 
       # 13. Publish Reports to GitHub Pages
-      - name: 📢 Publish Reports to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./test-results
-          destination_dir: test-results
+#      - name: 📢 Publish Reports to GitHub Pages
+#        if: always()
+#        uses: peaceiris/actions-gh-pages@v3
+#        with:
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          publish_dir: ./test-results
+#          destination_dir: test-results
 
       # 14. Final Status Notification
       - name: 📬 Notify CI Status
