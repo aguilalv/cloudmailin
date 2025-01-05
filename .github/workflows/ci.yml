@@ -44,65 +44,56 @@ jobs:
 
       # 6. Run unit tests with coverage
       - name: Run unit tests
-        run: pytest --cov=cloudmailin --cov-report=xml --cov-report=html:coverage/html --junitxml=reports/unit-tests.xml --ignore=tests/functional
+        run: pytest --cov=cloudmailin --cov-report=xml:reports/coverage.xml --cov-report=html:reports/coverage --junitxml=reports/unit-tests.xml --html=reports/unit-tests-report.html --ignore=tests/functional
 
-      # 7. Upload Unit Test Results
-      - name: 📊 Upload Unit Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unit-test-results
-          path: ./reports/unit-tests.xml
-
-      # 8. Upload Coverage Reports
-      - name: 📊 Upload Coverage Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: ./reports/coverage/html/
-
-      # 9. Run functional tests
+      # 7. Run functional tests
       - name: Run functional tests
         run: pytest tests/functional --junitxml=reports/functional-tests.xml --html=reports/functional-tests-report.html
 
-      # 10. Upload Functional Test Results
-      - name: 📊 Upload Functional Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: functional-test-results
-          path: ./reports/functional-tests-report.html
-
-      # 11. Enforce Coverage Thresholds
+      # 8. Check coverage thresholds
       - name: Check coverage thresholds
         run: |
-          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(float(ET.parse('coverage.xml').getroot().attrib['line-rate']) * 100)")
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(float(ET.parse('reports/coverage.xml').getroot().attrib['line-rate']) * 100)")
           echo "Coverage: $COVERAGE%"
           if (( $(echo "$COVERAGE < 90.0" | bc -l) )); then
             echo "Test coverage ($COVERAGE%) is below the required threshold (90%)"
             exit 1
           fi
 
-
-      # 12. Generate GitHub Actions Summary
-      - name: 📄 Add Test Report Summary
+      # 9. Create GitHub Pages Structure
+      - name: Prepare GitHub Pages Reports
         if: always()
         run: |
-          echo "## 📊 Test Report Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ **Unit Tests Passed:** $(pytest --count)" >> $GITHUB_STEP_SUMMARY
-          echo "- 📈 **Coverage:** $(python -c 'import xml.etree.ElementTree as ET; print(float(ET.parse("coverage.xml").getroot().attrib["line-rate"])*100)')%" >> $GITHUB_STEP_SUMMARY
-          echo "- 📝 **Detailed reports available on GitHub Pages and as artifacts.**" >> $GITHUB_STEP_SUMMARY
+          mkdir -p gh-pages
+          cp reports/unit-tests-report.html gh-pages/unit-tests-report.html
+          cp reports/functional-tests-report.html gh-pages/functional-tests-report.html
+          cp -r reports/coverage gh-pages/coverage
+          echo '<!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Test Reports</title>
+          </head>
+          <body>
+              <h1>Test and Coverage Reports</h1>
+              <ul>
+                  <li><a href="unit-tests-report.html">Unit Test Report</a></li>
+                  <li><a href="functional-tests-report.html">Functional Test Report</a></li>
+                  <li><a href="coverage/index.html">Coverage Report</a></li>
+              </ul>
+          </body>
+          </html>' > gh-pages/index.html
 
-      # 13. Publish Reports to GitHub Pages
+      # 10. Publish Reports to GitHub Pages
       - name: 📢 Publish Reports to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports
+          publish_dir: ./gh-pages
 
-      # 14. Final Status Notification
+      # 11. Final Status Notification
       - name: 📬 Notify CI Status
         if: always()
         run: |
@@ -112,8 +103,4 @@ jobs:
             echo "❌ CI Pipeline encountered errors!"
           fi
 
-      - name: 🐛 Debug Reports Directory
-        if: always()
-        run: |
-          echo "Checking contents of reports directory:"
-          ls -R ./reports
+
