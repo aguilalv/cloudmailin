@@ -44,7 +44,7 @@ jobs:
 
       # 6. Run unit tests with coverage
       - name: Run unit tests
-        run: pytest --cov=cloudmailin --cov-report=xml --cov-report=html:coverage/html --junitxml=test-results/unit-tests.xml --ignore=tests/functional
+        run: pytest --cov=cloudmailin --cov-report=xml --cov-report=html:coverage/html --junitxml=reports/unit-tests.xml --ignore=tests/functional
 
       # 7. Upload Unit Test Results
       - name: 📊 Upload Unit Test Results
@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unit-test-results
-          path: ./test-results/unit-tests.xml
+          path: ./reports/unit-tests.xml
 
       # 8. Upload Coverage Reports
       - name: 📊 Upload Coverage Reports
@@ -60,11 +60,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-reports
-          path: ./coverage/html/
+          path: ./reports/coverage/html/
 
       # 9. Run functional tests
       - name: Run functional tests
-        run: pytest tests/functional --junitxml=test-results/functional-tests.xml --html=test-results/functional-tests-report.html
+        run: pytest tests/functional --junitxml=reports/functional-tests.xml --html=reports/functional-tests-report.html
 
       # 10. Upload Functional Test Results
       - name: 📊 Upload Functional Test Results
@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: functional-test-results
-          path: ./test-results/functional-tests-report.html
+          path: ./reports/functional-tests-report.html
 
       # 11. Enforce Coverage Thresholds
       - name: Check coverage thresholds
@@ -111,3 +111,9 @@ jobs:
           else
             echo "❌ CI Pipeline encountered errors!"
           fi
+
+      - name: 🐛 Debug Reports Directory
+        if: always()
+        run: |
+          echo "Checking contents of reports directory:"
+          ls -R ./reports
