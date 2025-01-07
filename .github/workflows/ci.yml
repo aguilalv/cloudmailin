@@ -37,6 +37,10 @@ jobs:
       - name: Run black
         run: black . --check
 
+      # 4.5. Run flake8 linting
+      - name: Run flake8
+        run: flake8 .
+
       # 5. Run unit tests with coverage and Allure results
       - name: Run unit tests with coverage
         run: |
