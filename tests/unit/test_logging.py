@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import patch
 from cloudmailin import create_app
 import json
@@ -14,7 +13,7 @@ def test_logging_initialization():
     Test that the app logs a startup message during initialization.
     """
     with patch("cloudmailin.__init__.Flask.logger") as mock_logger:
-        app = create_app()
+        create_app()
         mock_logger.info.assert_any_call("Application starting...")
 
 

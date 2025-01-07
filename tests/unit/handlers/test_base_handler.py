@@ -1,5 +1,4 @@
-import pytest
-from unittest.mock import patch, call
+from unittest.mock import patch
 from cloudmailin.handlers.base_handler import BaseHandler
 from cloudmailin.schemas import Email
 

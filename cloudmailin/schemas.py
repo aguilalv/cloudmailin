@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Optional
 from pydantic import BaseModel, EmailStr, model_validator, Field
 from datetime import datetime
 

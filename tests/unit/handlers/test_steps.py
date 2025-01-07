@@ -1,4 +1,3 @@
-import pytest
 from cloudmailin.schemas import Email
 from cloudmailin.handlers.steps import assign_campaign_type
 

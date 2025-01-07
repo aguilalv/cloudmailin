@@ -3,8 +3,6 @@ from pydantic import ValidationError
 
 from cloudmailin.schemas import Email
 
-from icecream import ic
-
 bp = Blueprint("generic", __name__, url_prefix="/generic")
 
 
@@ -44,6 +42,6 @@ def new_generic_email():
         # Handle structured Pydantic errors
         return jsonify({"error": "Validation failed", "details": str(e)}), 400
 
-    except Exception as e:
+    except Exception:
         current_app.logger.exception("Unhandled exception in /generic/new")
         return jsonify({"error": "Internal Server Error"}), 500

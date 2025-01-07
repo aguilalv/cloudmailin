@@ -2,11 +2,9 @@
 # import tempfile
 
 import pytest
-import yaml
 import textwrap
 
 from cloudmailin import create_app
-from cloudmailin.db import get_db, init_db
 
 # test_db_file = Path(__file__) / "data.sql"
 # with open(test_db_file)

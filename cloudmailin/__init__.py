@@ -1,14 +1,10 @@
-import os
-import logging
 from flask import Flask, request
-
-from cloudmailin.handler_registry import HANDLERS_MAP, HandlerRegistry
 
 
 def create_app(test_config=None):
     # Late import to ensure the function is patched correctly in tests.
-    # This follows Flask's pattern of initializing dependencies dynamically within create_app,
-    # and avoids module-level imports that can cause issues with testing and state management.
+    # Follows Flask's pattern of initializing dependencies dynamically within create_app
+    # Avoids module-level imports that can cause issues with testing and state mgmnt
     from .handler_registry import initialize_handler_registry_from_config
 
     from .logging_setup import configure_logging  # Import the logging setup

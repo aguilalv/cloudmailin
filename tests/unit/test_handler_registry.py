@@ -1,11 +1,8 @@
 import pytest
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import patch, mock_open
 
-# import builtins
 import yaml
 
-from cloudmailin import create_app
-from cloudmailin.handler_registry import HandlerRegistry
 from cloudmailin.handlers.base_handler import BaseHandler
 
 from cloudmailin.handler_registry import (

@@ -1,14 +1,9 @@
 import pytest
 from unittest.mock import patch, Mock
-from flask import Flask, current_app
+from flask import current_app
 
 from cloudmailin import create_app
 from cloudmailin.handler_registry import HandlerRegistry
-
-# from cloudmailin.generic import new_generic_email
-from cloudmailin.schemas import Email
-
-from icecream import ic
 
 
 # --- Handler Registry Accesibility Tests --- #
@@ -45,7 +40,7 @@ def test_generic_view_selects_correct_handler(client, app, valid_email_data):
             "get_handler_for_sender",
             wraps=handler_registry.get_handler_for_sender,
         ) as mock_get_handler:
-            response = client.post("/generic/new", json=valid_email_data)
+            client.post("/generic/new", json=valid_email_data)
 
             # Assert the handler selection logic
             mock_get_handler.assert_called_once_with("specific_sender@example.com")
@@ -63,7 +58,7 @@ def test_generic_view_calls_handler_handle(client, app, valid_email_data):
         MockHandler = type("MockHandler", (), {"handle": Mock()})
         handler_registry.register(valid_email_data["envelope"]["from"], MockHandler)
 
-    response = client.post("/generic/new", json=valid_email_data)
+    client.post("/generic/new", json=valid_email_data)
 
     MockHandler.handle.assert_called_once()
 
