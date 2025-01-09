@@ -29,7 +29,7 @@ jobs:
       # 4. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=${{ secrets.GCLOUD_PROJECT_ID }}-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
+          IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
