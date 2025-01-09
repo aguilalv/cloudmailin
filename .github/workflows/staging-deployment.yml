@@ -14,19 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Set up Google Cloud CLI
+      # 2. Authenticate with Google Cloud
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+
+      # 3. Set up Google Cloud CLI
       - name: Set up Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: '427.0.0'
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
 
       # 3. Authenticate Docker with GAR
       - name: Authenticate Docker with GAR
         run: gcloud auth configure-docker us-central1-docker.pkg.dev
-
-
 
       # 4. Build and Push Docker Image
       - name: Build and Push Docker Image
