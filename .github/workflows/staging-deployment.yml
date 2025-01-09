@@ -1,0 +1,44 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout Code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up Google Cloud CLI
+      - name: Set up Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: '427.0.0'
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+
+      # 3. Authenticate Docker with GAR
+      - name: Authenticate Docker with GAR
+        run: gcloud auth configure-docker ${{ secrets.GCLOUD_PROJECT_ID }}-docker.pkg.dev
+
+      # 4. Build and Push Docker Image
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_NAME=${{ secrets.GCLOUD_PROJECT_ID }}-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
+          docker build -t $IMAGE_NAME .
+          docker push $IMAGE_NAME
+
+      # 6. Deploy to Google Cloud Run
+      - name: Deploy to Google Cloud Run
+        run: |
+          gcloud run deploy cloudmailin-staging \
+            --image=${{ secrets.GCLOUD_PROJECT_ID }}-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }} \
+            --region=us-central1 \
+            --platform=managed \
+            --allow-unauthenticated
+
