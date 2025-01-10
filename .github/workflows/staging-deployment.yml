@@ -9,6 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      REGION: us-central1
+      DOMAIN: cm-staging.aalhub.uk
+      SERVICE: cloudmailin-staging
+
     steps:
       # 1. Checkout Code
       - name: Checkout code
@@ -27,14 +32,14 @@ jobs:
           version: '427.0.0'
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
 
-      # 4. Authenticate Docker with GAR
+      # 4. Authenticate Docker with Google Artifact Registry
       - name: Authenticate Docker with GAR
-        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+        run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
 
       # 5. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
+          IMAGE_NAME=$REGION-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
@@ -42,16 +47,21 @@ jobs:
       - name: Wait before deploying
         run: sleep 10
 
-      # 7. List Images in GAR
-      - name: List Images in GAR
-        run: gcloud artifacts docker images list us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging
-
-      # 8. Deploy to Google Cloud Run
+      # 7. Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
         run: |
-          gcloud run deploy cloudmailin-staging \
-            --image=us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }} \
-            --region=us-central1 \
+          gcloud run deploy $SERVICE \
+            --image=$REGION-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }} \
+            --region=$REGION \
             --platform=managed \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --quiet
+
+      # 8. Ensure Domain Mapping Exists
+      - name: Ensure Domain Mapping Exists
+        run: |
+          # Check if domain mapping exists
+          gcloud run domain-mappings describe --domain=$DOMAIN --region=$REGION --quiet || \
+          # Create the domain mapping if it doesn't exist
+          gcloud run domain-mappings create --domain=$DOMAIN --service=$SERVICE --region=$REGION --quiet
 
