@@ -32,22 +32,27 @@ jobs:
           version: '427.0.0'
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
 
-      # 4. Authenticate Docker with Google Artifact Registry
+      # 4. Install gcloud beta components
+      - name: Install gcloud beta components
+        run: |
+          gcloud components install beta --quiet
+
+      # 5. Authenticate Docker with Google Artifact Registry
       - name: Authenticate Docker with GAR
         run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
 
-      # 5. Build and Push Docker Image
+      # 6. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=$REGION-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
-      # 6. Wait before deploying
+      # 7. Wait before deploying
       - name: Wait before deploying
         run: sleep 10
 
-      # 7. Deploy to Google Cloud Run
+      # 8. Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
         run: |
           gcloud run deploy $SERVICE \
@@ -57,7 +62,7 @@ jobs:
             --allow-unauthenticated \
             --quiet
 
-      # 8. Ensure Domain Mapping Exists
+      # 9. Ensure Domain Mapping Exists
       - name: Ensure Domain Mapping Exists
         run: |
           # Check if domain mapping exists
