@@ -27,45 +27,31 @@ jobs:
           version: '427.0.0'
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
 
-      # 3. Authenticate Docker with GAR
+      # 4. Authenticate Docker with GAR
       - name: Authenticate Docker with GAR
-#        run: gcloud auth configure-docker us-central1-docker.pkg.dev
-        run: |
-          echo ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }} | gcloud auth activate-service-account --key-file=-
-          gcloud auth configure-docker us-central1-docker.pkg.dev
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
-
-
-      # 4. Build and Push Docker Image
+      # 5. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
+      # 6. Wait before deploying
       - name: Wait before deploying
         run: sleep 10
 
-
+      # 7. List Images in GAR
       - name: List Images in GAR
         run: gcloud artifacts docker images list us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging
 
-
-      # 6. Deploy to Google Cloud Run
+      # 8. Deploy to Google Cloud Run
       - name: Deploy to Google Cloud Run
-        run: |
-          gcloud run deploy cloudmailin-staging \
-            --image=${{ secrets.GCLOUD_PROJECT_ID }}-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }} \
-            --region=us-central1 \
-            --platform=managed \
-            --allow-unauthenticated
-
-      - name: Debug Deployment
         run: |
           gcloud run deploy cloudmailin-staging \
             --image=us-central1-docker.pkg.dev/${{ secrets.GCLOUD_PROJECT_ID }}/cloudmailin-staging/cloudmailin-staging:${{ github.sha }} \
             --region=us-central1 \
             --platform=managed \
             --allow-unauthenticated
-
 
