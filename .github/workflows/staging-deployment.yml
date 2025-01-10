@@ -62,11 +62,3 @@ jobs:
             --allow-unauthenticated \
             --quiet
 
-      # 9. Ensure Domain Mapping Exists
-      - name: Ensure Domain Mapping Exists
-        run: |
-          # Check if domain mapping exists
-          gcloud beta run domain-mappings describe --domain=$DOMAIN --region=$REGION --quiet || \
-          # Create the domain mapping if it doesn't exist
-          gcloud beta run domain-mappings create --domain=$DOMAIN --service=$SERVICE --region=$REGION --quiet
-
