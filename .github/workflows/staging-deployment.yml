@@ -61,7 +61,7 @@ jobs:
       - name: Ensure Domain Mapping Exists
         run: |
           # Check if domain mapping exists
-          gcloud run domain-mappings describe --domain=$DOMAIN --region=$REGION --quiet || \
+          gcloud run domain-mappings describe --domain=$DOMAIN --quiet || \
           # Create the domain mapping if it doesn't exist
           gcloud run domain-mappings create --domain=$DOMAIN --service=$SERVICE --region=$REGION --quiet
 
