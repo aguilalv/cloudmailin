@@ -9,10 +9,13 @@ def health_check():
     """
     A health check endpoint to verify the service's status.
     """
-    return jsonify(
-        {
-            "status": "healthy",
-            "version": os.getenv("APP_VERSION", "unknown"),
-            "deployed_at": os.getenv("DEPLOYED_AT", "unknown"),
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "status": "healthy",
+                "version": os.getenv("APP_VERSION", "unknown"),
+                "deployed_at": os.getenv("DEPLOYED_AT", "unknown"),
+            }
+        ),
+        200,
+    )

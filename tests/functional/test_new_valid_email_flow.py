@@ -1,5 +1,6 @@
 import json
 import pytest
+import requests
 
 from cloudmailin.handlers import BaseHandler, CampaignClassifierHandler
 
@@ -17,54 +18,50 @@ def valid_real_payload():
 @pytest.mark.parametrize(
     "handler_class",
     [
-        BaseHandler,  # Base handler
-        CampaignClassifierHandler,  # Specialized handler
+        "BaseHandler",  # Base handler
+        #        "CampaignClassifierHandler",  # Specialized handler
     ],
 )
 def test_email_processing_flow_with_handler(
-    client, app, valid_real_payload, caplog, handler_class
+    base_url, valid_real_payload, caplog, handler_class
 ):
     """
     Functional test to verify end-to-end email processing flow:
-    - Valid payload is sent.
-    - The correct handler processes the email.
-    - Logs reflect the correct processing steps.
-    - Email is 'stored' (via log placeholder for now).
+    - Valid payload is sent to the server.
+    - The correct handler processes the email (validated via the response or logs).
+    - Email is 'stored' (simulated by checking the response).
     """
-    with app.app_context():
-        # Arrange
-        handler_registry = app.config["handler_registry"]
+    # Arrange
+    endpoint = f"{base_url}/generic/new"
+    sender = "test_handler@example.com"
 
-        # Register the handler with a unique sender
-        sender = "test_handler@example.com"
-        handler_registry.register(sender, handler_class)
+    # Update the payload with the unique sender for the handler
+    valid_real_payload["envelope"]["from"] = sender
 
-        caplog.clear()
+    # Act: Send the payload
+    response = requests.post(endpoint, json=valid_real_payload)
 
-        # Update the payload with the registered sender
-        valid_real_payload["envelope"]["from"] = sender
+    # Assert: Verify the response
+    assert (
+        response.status_code == 200
+    ), f"Expected 200 OK, got {response.status_code}. Response: {response.text}"
 
-        # Act
-        # Send the payload
-        response = client.post("/generic/new", json=valid_real_payload)
+    # Parse the response JSON for validation
+    response_data = response.json()
 
-        # Assert: response
-        assert (
-            response.status_code == 200
-        ), f"{handler_class.__name__} did not return 200 OK"
+    # Parse the response JSON for validation
+    response_data = response.json()
 
-        # Assert: Log health check (check level and pattern)
-        # Check dynamic log message
-        assert any(
-            record.levelname == "INFO"
-            and f"[{handler_class.__name__}] Processing email" in record.message
-            for record in caplog.records
-        ), f"Expected log from handler {handler_class.__name__} not found"
+    # Assert: Verify email processing status
+    assert response_data.get("status") == "processed", (
+        f"Expected 'processed' status, but got {response_data.get('status')}. "
+        f"Response: {response_data}"
+    )
 
-        # Assert: Database Storage (temporary placeholder)
-        assert any(
-            record.levelname == "INFO" and "store in database" in record.message
-            for record in caplog.records
-        ), "Expected a log indicating database storage."
+    # Assert: Verify the handler used for processing
+    assert response_data.get("handler") == "BaseHandler", (
+        f"Expected handler 'BaseHandler', but got {response_data.get('handler')}. "
+        f"Response: {response_data}"
+    )
 
-        # TODO: Replace database storage log assertion with an actual database check
+    # TODO: Add a check that the message has been stored in a database

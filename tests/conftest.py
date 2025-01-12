@@ -9,18 +9,21 @@ from cloudmailin import create_app
 # test_db_file = Path(__file__) / "data.sql"
 # with open(test_db_file)
 
+
 # Configure standard hook in pytest to pass personalised command line arguments
 def pytest_addoption(parser):
     parser.addoption(
-        "--base-url",                  # The name of the argument
-        action="store",                # Tells pytest to store the value provided with the argument
+        "--base-url",  # The name of the argument
+        action="store",  # Tells pytest to store the value provided with the argument
         default="http://localhost:5000",  # Default value when the argument is not provided
-        help="Base URL for the test environment"  # Description shown in help
+        help="Base URL for the test environment",  # Description shown in help
     )
+
 
 @pytest.fixture
 def base_url(request):
     return request.config.getoption("--base-url")
+
 
 @pytest.fixture
 def app():

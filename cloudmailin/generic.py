@@ -33,6 +33,8 @@ def new_generic_email():
                     "date": email.date,
                     "plain": email.plain,
                     "html": email.html,
+                    "status": "processed",
+                    "handler": handler_class.__name__,
                 }
             ),
             200,

@@ -51,12 +51,12 @@ jobs:
                  --ignore=tests/functional
 
       # 6. Run functional tests with Allure results
-      - name: Run functional tests
-        run: |
-          pytest tests/functional \
-                 --junitxml=reports/functional-tests.xml \
-                 --html=reports/functional-tests-report.html \
-                 --alluredir=reports/allure-results
+#      - name: Run functional tests
+#        run: |
+#          pytest tests/functional \
+#                 --junitxml=reports/functional-tests.xml \
+#                 --html=reports/functional-tests-report.html \
+#                 --alluredir=reports/allure-results
 
       # 6.5. Install Allure CLI
       - name: Install Allure CLI

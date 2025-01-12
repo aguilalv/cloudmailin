@@ -63,9 +63,7 @@ def test_generic_view_calls_handler_handle(client, app, valid_email_data):
     MockHandler.handle.assert_called_once()
 
 
-def test_generic_view_valid_payload_returns_200_and_correct_json(
-    client, valid_email_data
-):
+def test_generic_view_valid_payload_returns_200(client, valid_email_data):
     """
     Test /generic/new with a valid payload.
 
@@ -75,14 +73,35 @@ def test_generic_view_valid_payload_returns_200_and_correct_json(
     response = client.post("/generic/new", json=valid_email_data)
 
     assert response.status_code == 200
+
+
+def test_generic_view_returns_status_and_handler(client, app, valid_email_data):
+    """
+    Test that the correct response is returned, including status and handler fields.
+    """
+    valid_email_data["envelope"]["from"] = "specific_sender@example.com"
+
+    with app.app_context():
+        handler_registry = current_app.config["handler_registry"]
+
+        # Create a mock handler class with a 'handle' method
+        MockHandler = type("MockHandler", (), {"handle": Mock()})
+        handler_registry.register("specific_sender@example.com", MockHandler)
+
+    # Act: Send the payload and capture the response
+    response = client.post("/generic/new", json=valid_email_data)
     data = response.get_json()
+
+    # Assert: Check the response data
     assert data == {
-        "sender": "sender@example.com",
+        "sender": "specific_sender@example.com",
         "recipient": "recipient@example.com",
         "subject": "Test Subject",
         "date": "Mon, 16 Jan 2012 17:00:01 GMT",
         "plain": "Test Plain Body.",
         "html": '<html><head>\n<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"></head><body\n bgcolor="#FFFFFF" text="#000000">\nTest with <span style="font-weight: bold;">HTML</span>.<br>\n</body>\n</html>',
+        "status": "processed",
+        "handler": MockHandler.__name__,
     }
 
 
