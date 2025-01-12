@@ -47,8 +47,9 @@ def create_app(test_config=None):
         app.logger.info(f"Received request: {request.method} {request.path}")
 
     # Register Blueprints
-    from . import generic
+    from . import generic, health
 
     app.register_blueprint(generic.bp)
+    app.register_blueprint(health.bp)
 
     return app
