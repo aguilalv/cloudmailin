@@ -47,9 +47,6 @@ def test_email_processing_flow_with_handler(
     # Parse the response JSON for validation
     response_data = response.json()
 
-    # Parse the response JSON for validation
-    response_data = response.json()
-
     # Assert: Verify email processing status
     assert response_data.get("status") == "processed", (
         f"Expected 'processed' status, but got {response_data.get('status')}. "
