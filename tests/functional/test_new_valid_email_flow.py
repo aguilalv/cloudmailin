@@ -2,8 +2,6 @@ import json
 import pytest
 import requests
 
-from cloudmailin.handlers import BaseHandler, CampaignClassifierHandler
-
 
 # Assuming valid_email_payload.json exists in the test_data directory
 @pytest.fixture
