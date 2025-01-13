@@ -1,0 +1,207 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_handler_registry","","","","test_handler_registry_register_and_retrieve","
+    Test that handlers can be registered and retrieved correctly from the registry.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","0","tests.unit","test_logging","","","","test_json_logging_format","
+    Ensure that logs are formatted as JSON with required fields.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","2","tests.unit","test_generic_view","","","","test_generic_view_missing_required_fields[headers.subject-Validation failed]","
+    Parametrized test for missing required fields.
+
+    Ensures that missing required fields return a 400 error.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_handler_registry","","","","test_handler_registry_rejects_invalid_handler[invalid_handler3]","
+    Test that the handler registry rejects invalid handler classes.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit","test_email_schema","","","","test_flatten_payload_invalid_input","
+    Test flatten_payload with an invalid (non-dictionary) input.
+
+    Ensures that the method raises a ValueError when input is not a dictionary.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","0","tests.unit","test_handler_registry","","","","test_handler_registry_defaults_to_generic_handler",""
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit","test_generic_view","","","","test_generic_view_calls_handler_handle","
+    Test that the selected handler's handle method is called with the Email object.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_generic_view","","","","test_generic_view_invalid_input[headers.date-Invalid Date-Validation failed]","
+    Parametrized test for invalid input values.
+
+    Ensures specific fields with invalid data return a 400 error.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_missing_fields[envelope.to-recipient]","
+    Test flatten_payload with missing keys in the nested payload.
+
+    Ensures that missing fields return None without raising errors.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","5","tests.unit","test_logging","","","","test_logging_initialization","
+    Test that the app logs a startup message during initialization.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit.handlers","test_base_handler","","","","test_base_handler_executes_steps_in_order","
+    Test that BaseHandler executes steps in the correct order,
+    passing the modified email object through each step.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_valid_input","
+    Test flatten_payload with a well-structured nested email payload.
+
+    Verifies that the method correctly extracts and flattens fields from
+    nested structures.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","0","tests.unit","test_handler_registry","","","","test_handler_registry_rejects_invalid_handler[123]","
+    Test that the handler registry rejects invalid handler classes.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_health","","","","test_health_check_endpoint","
+    Test the health check endpoint returns the correct response.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","0","tests.unit","test_handler_registry","","","","test_handler_registry_rejects_invalid_handler[invalid_handler4]","
+    Test that the handler registry rejects invalid handler classes.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_logging","","","","test_logging_incoming_request","
+    Test that incoming requests are logged with method and path.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_generic_view","","","","test_generic_view_missing_required_fields[envelope.from-Validation failed]","
+    Parametrized test for missing required fields.
+
+    Ensures that missing required fields return a 400 error.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_handler_registry","","","","test_handler_registry_rejects_invalid_handler[None]","
+    Test that the handler registry rejects invalid handler classes.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit.handlers","test_steps","","","","test_assign_campaign_type_does_not_modify_unrelated_fields","
+    Test that assign_campaign_type does not modify unrelated fields.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit.handlers","test_steps","","","","test_assign_campaign_type_with_no_match","
+    Test that assign_campaign_type assigns a default campaign type
+    when no conditions are met.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","6","tests.unit","test_factory","","","","test_create_app_initializes_handler_registry_correctly","
+    Test that create_app correctly initializes handler_registry with configuration.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit.handlers","test_base_handler","","","","test_base_handler_stores_final_email_model","
+    Test that the final modified email model is passed to the storage step to be stored in the database.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit","test_email_schema","","","","test_from_flat_data_creates_valid_email","
+    Test from_flat_data creates a valid Email instance.
+
+    Ensures the factory method correctly initializes an Email model.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","4","tests.unit","test_generic_view","","","","test_access_handler_registry_in_view","
+    Test that the handler registry can be accessed via app context.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit.handlers","test_campaign_classifier_handler","","","","test_campaign_classifier_handler_integration[subject-Special Sale-promotion]","
+    Integration test to verify that CampaignClassifierHandler processes an Email object correctly,
+    assigning campaign_type based on a dynamic field while leaving other fields untouched.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit","test_generic_view","","","","test_generic_view_returns_status_and_handler","
+    Test that the correct response is returned, including status and handler fields.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit","test_generic_view","","","","test_generic_view_invalid_input[envelope.from-invalid-email-Validation failed]","
+    Parametrized test for invalid input values.
+
+    Ensures specific fields with invalid data return a 400 error.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","6","tests.unit","test_generic_view","","","","test_generic_view_selects_correct_handler","
+    Test that the correct handler is selected based on the sender.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","1","tests.unit","test_handler_registry","","","","test_app_initializes_with_handler_registry","
+    Test that the app initializes with a handler registry in its config.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit","test_email_schema","","","","test_preprocess_payload_missing_required_fields[envelope.from-Missing required fields]","
+    Test preprocess_payload with missing required fields.
+
+    Ensures that a ValueError is raised when required fields are missing.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","7","tests.unit","test_factory","","","","test_config",""
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_preprocess_payload_missing_required_fields[headers.subject-Missing required fields]","
+    Test preprocess_payload with missing required fields.
+
+    Ensures that a ValueError is raised when required fields are missing.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit.handlers","test_campaign_classifier_handler","","","","test_campaign_classifier_handler_has_correct_steps","
+    Test that CampaignClassifierHandler includes only the assign_campaign_type step.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit.handlers","test_campaign_classifier_handler","","","","test_campaign_classifier_handler_integration[subject-Meeting Invitation-unclassified]","
+    Integration test to verify that CampaignClassifierHandler processes an Email object correctly,
+    assigning campaign_type based on a dynamic field while leaving other fields untouched.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit","test_email_schema","","","","test_preprocess_payload_valid_input","
+    Test preprocess_payload with valid nested payload.
+
+    Verifies that preprocessing flattens the payload and parses the date correctly.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit.handlers","test_campaign_classifier_handler","","","","test_campaign_classifier_handler_integration[subject-Weekly Newsletter-unclassified]","
+    Integration test to verify that CampaignClassifierHandler processes an Email object correctly,
+    assigning campaign_type based on a dynamic field while leaving other fields untouched.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_missing_fields[headers.subject-subject]","
+    Test flatten_payload with missing keys in the nested payload.
+
+    Ensures that missing fields return None without raising errors.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit","test_generic_view","","","","test_generic_view_valid_payload_returns_200","
+    Test /generic/new with a valid payload.
+
+    Ensures that a valid payload returns a 200 OK status
+    and the correct JSON response.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","4","tests.unit","test_handler_registry","","","","test_valid_yaml_config_has_expected_keys","
+    Test that a valid YAML configuration parsing produces expected top-level keys and structure.
+
+    Ensures that the configuration defines 'handlers' and each handler has 'steps' and 'senders'.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","3","tests.unit","test_handler_registry","","","","test_valid_yaml_config_parses_senders","
+    Test that the senders in a valid YAML configuration are correctly parsed.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","0","tests.unit","test_handler_registry","","","","test_handler_registry_rejects_invalid_handler[not_a_class]","
+    Test that the handler registry rejects invalid handler classes.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","5","tests.unit","test_handler_registry","","","","test_load_invalid_yaml_configs[handlers.CampaignClassifierHandler.senders-None]","
+    Parametrized test for various invalid YAML configurations.
+
+    Each test modifies a specific part of the valid configuration and expects a ValueError.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","3","tests.unit","test_handler_registry","","","","test_initialize_handler_registry_from_config","
+    Test that the handler registry is initialized correctly from the YAML configuration.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","4","tests.unit","test_handler_registry","","","","test_valid_yaml_config_parses_steps","
+    Test that the steps in a valid YAML configuration are correctly parsed.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","53","tests.unit.handlers","test_base_handler","","","","test_base_handler_logs_health_message","
+    Test that BaseHandler logs a health-related message when handling an email.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit","test_email_schema","","","","test_preprocess_payload_invalid_date","
+    Test preprocess_payload with an invalid date format.
+
+    Ensures that a ValueError is raised for an improperly formatted date.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_missing_fields[html-html]","
+    Test flatten_payload with missing keys in the nested payload.
+
+    Ensures that missing fields return None without raising errors.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_missing_fields[plain-plain]","
+    Test flatten_payload with missing keys in the nested payload.
+
+    Ensures that missing fields return None without raising errors.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","2","tests.unit.handlers","test_campaign_classifier_handler","","","","test_campaign_classifier_handler_integration[subject-Random Subject-unclassified]","
+    Integration test to verify that CampaignClassifierHandler processes an Email object correctly,
+    assigning campaign_type based on a dynamic field while leaving other fields untouched.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","0","tests.unit","test_email_schema","","","","test_flatten_payload_missing_fields[headers.date-date]","
+    Test flatten_payload with missing keys in the nested payload.
+
+    Ensures that missing fields return None without raising errors.
+    "
+"passed","Mon Jan 13 14:12:49 UTC 2025","Mon Jan 13 14:12:49 UTC 2025","1","tests.unit.handlers","test_steps","","","","test_assign_campaign_type_with_matching_subject","
+    Test that assign_campaign_type assigns the correct campaign type
+    based on a matching subject keyword.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","6","tests.unit","test_handler_registry","","","","test_load_invalid_yaml_configs[handlers.CampaignClassifierHandler.steps-None]","
+    Parametrized test for various invalid YAML configurations.
+
+    Each test modifies a specific part of the valid configuration and expects a ValueError.
+    "
+"passed","Mon Jan 13 14:12:50 UTC 2025","Mon Jan 13 14:12:50 UTC 2025","5","tests.unit","test_handler_registry","","","","test_load_invalid_yaml_configs[root-modification0]","
+    Parametrized test for various invalid YAML configurations.
+
+    Each test modifies a specific part of the valid configuration and expects a ValueError.
+    "
