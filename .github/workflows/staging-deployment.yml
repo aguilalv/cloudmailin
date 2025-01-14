@@ -86,11 +86,17 @@ jobs:
           --base-url=${{ env.BASE_URL }} \
           --alluredir=allure-results
 
-      # 5. Generate Allure Report
+      # D. Install Allure CLI
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y allure
+
+      # E. Generate Allure Report
       - name: Generate Allure Report
         run: allure generate allure-results --clean -o allure-report
 
-      # 6. Deploy Allure Report to GitHub Pages
+      # F. Deploy Allure Report to GitHub Pages
       - name: Deploy Allure Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
