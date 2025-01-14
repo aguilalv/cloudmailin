@@ -42,7 +42,6 @@ jobs:
         run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
 
       # 6. Build and Push Docker Image
-      # 6. Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           DEPLOYED_AT=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -64,3 +63,10 @@ jobs:
             --allow-unauthenticated \
             --quiet
 
+      # --- Post deployment tests ---
+
+      # A. Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.3"
