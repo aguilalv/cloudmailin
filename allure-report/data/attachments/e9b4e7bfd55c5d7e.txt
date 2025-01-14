@@ -1,3 +1,0 @@
-{"timestamp": "2025-01-14T16:58:43.639556+00:00", "level": "INFO", "message": "Application starting..."}
-{"timestamp": "2025-01-14T16:58:43.643963+00:00", "level": "INFO", "message": "[CampaignClassifierHandler] Processing email from sender@example.com"}
-{"timestamp": "2025-01-14T16:58:43.644113+00:00", "level": "INFO", "message": "Here I should store in database the email with subject Random Subject"}
