@@ -1,1 +1,0 @@
-{"timestamp": "2025-01-14T16:43:45.592828+00:00", "level": "INFO", "message": "Application starting..."}
