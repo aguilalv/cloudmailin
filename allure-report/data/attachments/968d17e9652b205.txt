@@ -1,3 +1,0 @@
-{"timestamp": "2025-01-14T17:54:37.732747+00:00", "level": "INFO", "message": "Application starting..."}
-{"timestamp": "2025-01-14T17:54:37.736876+00:00", "level": "INFO", "message": "[TestHandler] Processing email from sender@example.com"}
-{"timestamp": "2025-01-14T17:54:37.737107+00:00", "level": "INFO", "message": "Here I should store in database the email with subject Test Subject Step1 Step2"}
