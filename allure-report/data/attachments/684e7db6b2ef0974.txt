@@ -1,0 +1,2 @@
+{"timestamp": "2025-01-14T18:20:27.627905+00:00", "level": "INFO", "message": "Test JSON log message"}
+{"timestamp": "2025-01-14T18:20:27.627948+00:00", "level": "INFO", "message": "Test JSON log message"}
