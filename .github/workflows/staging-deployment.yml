@@ -98,6 +98,3 @@ jobs:
           publish_dir: allure-report
           destination_dir: allure-report # Optional: Store in subdirectory
 
-      # 7. Add a summary with link to Allure Report
-      - name: Add Allure Report Link
-        run: echo "Allure Report: [View Report](https://aguilalv.github.io/cloudmailin/allure-report/)" >> $GITHUB_STEP_SUMMARY
