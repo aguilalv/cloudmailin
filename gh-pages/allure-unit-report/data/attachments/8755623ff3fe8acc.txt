@@ -1,0 +1,2 @@
+{"timestamp": "2025-01-15T14:57:55.023184+00:00", "level": "INFO", "message": "Application starting..."}
+{"timestamp": "2025-01-15T14:57:55.027248+00:00", "level": "INFO", "message": "Received request: POST /generic/new"}
