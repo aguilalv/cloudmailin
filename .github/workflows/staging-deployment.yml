@@ -111,7 +111,7 @@ jobs:
           echo "## 📊 Test Report Summary" >> $GITHUB_STEP_SUMMARY
           
           # Links to Reports
-          echo "- 📝 **[View Allure Report](https://<username>.github.io/<repo>/reports-output/allure-functional-report/index.html)**" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **[View Allure Report](https://<username>.github.io/<repo>/reports-output/${{ github.ref_name }}/allure-functional-report/index.html)**" >> $GITHUB_STEP_SUMMARY
 
       - name: Pull latest gh-pages branch
         if: always()
@@ -126,22 +126,8 @@ jobs:
       - name: Prepare GitHub Pages Reports
         if: always()
         run: |
-          mkdir -p reports-output/allure-functional-report
-          cp -r reports/allure-report/* reports-output/allure-functional-report/
-          # echo '<!DOCTYPE html>
-          # <html lang="en">
-          # <head>
-          #     <meta charset="UTF-8">
-          #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          #     <title>CI/CD Test Reports</title>
-          # </head>
-          # <body>
-          #     <h1>CI/CD Test Reports</h1>
-          #     <ul>
-          #         <li><a href="reports-output/allure-functional-report/index.html">Allure Test Report</a></li>
-          #     </ul>
-          # </body>
-          # </html>' > gh-pages/index.html
+          mkdir -p reports-output/${{ github.ref_name }}/allure-functional-report
+          cp -r reports/allure-unit-report/* reports-output/${{ github.ref_name }}/allure-functional-report/
 
       # 10.5 Push new reports to github pages
       - name: Commit and Push to GitHub Pages
