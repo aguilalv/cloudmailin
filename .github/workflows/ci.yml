@@ -104,7 +104,7 @@ jobs:
 
 
       # 10. Prepare GitHub Pages Reports
-       - name: Prepare GitHub Pages Reports
+      - name: Prepare GitHub Pages Reports
          if: always()
          run: |
            mkdir -p gh-pages/allure-unit-report
