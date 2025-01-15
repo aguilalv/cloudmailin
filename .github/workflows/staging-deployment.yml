@@ -127,7 +127,7 @@ jobs:
         if: always()
         run: |
           mkdir -p reports-output/${{ github.ref_name }}/allure-functional-report
-          cp -r reports/allure-unit-report/* reports-output/${{ github.ref_name }}/allure-functional-report/
+          cp -r reports/allure-report/* reports-output/${{ github.ref_name }}/allure-functional-report/
 
       # 10.5 Push new reports to github pages
       - name: Commit and Push to GitHub Pages
