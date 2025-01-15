@@ -128,20 +128,20 @@ jobs:
         run: |
           mkdir -p reports-output/allure-functional-report
           cp -r reports/allure-report/* reports-output/allure-functional-report/
-          echo '<!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>CI/CD Test Reports</title>
-          </head>
-          <body>
-              <h1>CI/CD Test Reports</h1>
-              <ul>
-                  <li><a href="reports-output/allure-functional-report/index.html">Allure Test Report</a></li>
-              </ul>
-          </body>
-          </html>' > gh-pages/index.html
+          # echo '<!DOCTYPE html>
+          # <html lang="en">
+          # <head>
+          #     <meta charset="UTF-8">
+          #     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          #     <title>CI/CD Test Reports</title>
+          # </head>
+          # <body>
+          #     <h1>CI/CD Test Reports</h1>
+          #     <ul>
+          #         <li><a href="reports-output/allure-functional-report/index.html">Allure Test Report</a></li>
+          #     </ul>
+          # </body>
+          # </html>' > gh-pages/index.html
 
       # 10.5 Push new reports to github pages
       - name: Commit and Push to GitHub Pages
