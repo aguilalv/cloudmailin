@@ -3,6 +3,7 @@ name: Deploy to Staging
 on:
   push:
     branches:
+      - master
       - staging
 
 jobs:
@@ -11,7 +12,7 @@ jobs:
 
     env:
       REGION: us-central1
-      DOMAIN: cm-staging.aalhub.uk
+#      DOMAIN: cm-staging.aalhub.uk
       SERVICE: cloudmailin-staging
       BASE_URL: ${{ secrets.STAGING_BASE_URL }}
 
