@@ -63,9 +63,7 @@ jobs:
       
       - name: Check coverage thresholds
         run: >
-          COVERAGE=$(python -c "import xml.etree.ElementTree as ET;
-          print(float(ET.parse('reports/coverage.xml').getroot().attrib['line-rate'])
-          * 100)")
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET;print(float(ET.parse('reports/coverage.xml').getroot().attrib['line-rate'])* 100)")
           echo "Coverage: $COVERAGE%"
           if (( $(echo "$COVERAGE < 90.0" | bc -l) )); then
             echo "Test coverage ($COVERAGE%) is below the required threshold (90%)"
