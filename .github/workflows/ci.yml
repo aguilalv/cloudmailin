@@ -94,7 +94,7 @@ jobs:
         if: always()
         run: |
           mkdir -p gh-pages/allure-unit-report
-          cp -r reports/allure-report/* gh-pages/allure-report/
+          cp -r reports/allure-unit-report/* gh-pages/allure-unit-report/
           mkdir -p gh-pages/coverage
           cp -r reports/coverage/* gh-pages/coverage/
       - name: 📬 Notify CI Status
