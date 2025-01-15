@@ -1,0 +1,1 @@
+INFO     test_json_logger:test_logging.py:49 Test JSON log message
