@@ -88,9 +88,9 @@ jobs:
           echo "- 📈 **Coverage:** $COVERAGE%" >> $GITHUB_STEP_SUMMARY
 
           # Links to Reports
-          echo "- 📝 **[View Unit tests Allure Report](https://<username>.github.io/<repo>/allure-unit-report/index.html)**" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **[View Unit tests Allure Report](https://<username>.github.io/<repo>/reports-output/allure-unit-report/index.html)**" >> $GITHUB_STEP_SUMMARY
 
-          # echo "- 📝 **[View Coverage Report](https://<username>.github.io/<repo>/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
+          # echo "- 📝 **[View Coverage Report](https://<username>.github.io/<repo>/reports-output/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
 
       - name: Pull latest gh-pages branch
         if: always()
@@ -104,16 +104,16 @@ jobs:
       - name: Prepare GitHub Pages Reports
         if: always()
         run: |
-          mkdir -p gh-pages/allure-unit-report
-          cp -r reports/allure-unit-report/* gh-pages/allure-unit-report/
-          mkdir -p gh-pages/coverage
-          cp -r reports/coverage/* gh-pages/coverage/
+          mkdir -p reports-output/allure-unit-report
+          cp -r reports/allure-unit-report/* reports-output/allure-unit-report/
+          mkdir -p reports-output/coverage
+          cp -r reports/coverage/* reports-output/coverage/
       
       # 10.5 Push new reports to github pages
       - name: Commit and Push to GitHub Pages
         if: always()
         run: |
-          git add gh-pages/*
+          git add reports-output/*
           git commit -m "Update GitHub Pages reports [${{ github.sha }}]" || echo "No changes to commit"
           git push origin gh-pages
       
