@@ -15,20 +15,26 @@ jobs:
         python-version:
           - 3.12.8
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
+      
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      
       - name: Run black
         run: black . --check
+      
       - name: Run flake8
         run: flake8 .
+      
       - name: Run unit tests with coverage
         run: |
           pytest --cov=cloudmailin --cov-report=xml:reports/coverage.xml \
@@ -36,6 +42,7 @@ jobs:
                  --junitxml=reports/unit-tests.xml \
                  --alluredir=reports/allure-results \
                  --ignore=tests/functional
+      
       - name: Install Allure CLI
         run: >
           wget
@@ -48,11 +55,13 @@ jobs:
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
           allure --version
+      
       - name: Generate Allure Report
         if: always()
         run: >
           allure generate reports/allure-results -o reports/allure-unit-report
           --clean
+      
       - name: Check coverage thresholds
         run: >
           COVERAGE=$(python -c "import xml.etree.ElementTree as ET;
@@ -65,31 +74,33 @@ jobs:
             echo "Test coverage ($COVERAGE%) is below the required threshold (90%)"
             exit 1
           fi
+      
       - name: 📄 Add Test Report Summary
         if: always()
         run: >
           echo "## 📊 Test Report Summary" >> $GITHUB_STEP_SUMMARY
-
-
           # Count Unit Tests
-
           UNIT_TEST_COUNT=$(pytest --collect-only --ignore=tests/functional | grep 'collected' | awk '{print $2}')
-
           echo "- ✅ **Unit Tests Passed:** $UNIT_TEST_COUNT" >> $GITHUB_STEP_SUMMARY
 
-
           # Coverage Percentage
-
           COVERAGE=$(python -c "import xml.etree.ElementTree as ET; print(f'{float(ET.parse(\"reports/coverage.xml\").getroot().attrib[\"line-rate\"])*100:.2f}')")
-
           echo "- 📈 **Coverage:** $COVERAGE%" >> $GITHUB_STEP_SUMMARY
 
-
           # Links to Reports
-
           echo "- 📝 **[View Unit tests Allure Report](https://<username>.github.io/<repo>/allure-unit-report/index.html)**" >> $GITHUB_STEP_SUMMARY
 
           # echo "- 📝 **[View Coverage Report](https://<username>.github.io/<repo>/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
+
+      - name: Pull latest gh-pages branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          git checkout gh-pages
+          git pull origin gh-pages
+
       - name: Prepare GitHub Pages Reports
         if: always()
         run: |
@@ -97,6 +108,7 @@ jobs:
           cp -r reports/allure-unit-report/* gh-pages/allure-unit-report/
           mkdir -p gh-pages/coverage
           cp -r reports/coverage/* gh-pages/coverage/
+      
       - name: 📬 Notify CI Status
         if: always()
         run: |
