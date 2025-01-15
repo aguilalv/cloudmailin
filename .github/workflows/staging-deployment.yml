@@ -120,8 +120,6 @@ jobs:
         run: |
           mkdir -p gh-pages/allure-report
           cp -r reports/allure-report/* gh-pages/allure-report/
-          mkdir -p gh-pages/coverage
-          cp -r reports/coverage/* gh-pages/coverage/
           echo '<!DOCTYPE html>
           <html lang="en">
           <head>
@@ -133,7 +131,6 @@ jobs:
               <h1>CI/CD Test Reports</h1>
               <ul>
                   <li><a href="allure-report/index.html">Allure Test Report</a></li>
-                  <li><a href="coverage/index.html">Coverage Report</a></li>
               </ul>
           </body>
           </html>' > gh-pages/index.html
