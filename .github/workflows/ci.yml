@@ -3,10 +3,13 @@ name: CI Pipeline
 on:
   push:
     branches:
+      - master
       - staging
   pull_request:
     branches:
+      - master
       - staging
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -47,13 +50,9 @@ jobs:
         run: >
           wget
           https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
-
           tar -zxvf allure-2.24.0.tgz
-
           sudo mv allure-2.24.0 /opt/allure
-
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
-
           allure --version
       
       - name: Generate Allure Report
@@ -67,9 +66,7 @@ jobs:
           COVERAGE=$(python -c "import xml.etree.ElementTree as ET;
           print(float(ET.parse('reports/coverage.xml').getroot().attrib['line-rate'])
           * 100)")
-
           echo "Coverage: $COVERAGE%"
-
           if (( $(echo "$COVERAGE < 90.0" | bc -l) )); then
             echo "Test coverage ($COVERAGE%) is below the required threshold (90%)"
             exit 1
@@ -88,9 +85,10 @@ jobs:
           echo "- 📈 **Coverage:** $COVERAGE%" >> $GITHUB_STEP_SUMMARY
 
           # Links to Reports
-          echo "- 📝 **[View Unit tests Allure Report](https://<username>.github.io/<repo>/reports-output/allure-unit-report/index.html)**" >> $GITHUB_STEP_SUMMARY
+          print(f'{float(ET.parse(\"reports/coverage.xml\").getroot().attrib[\"line-rate\"])*100:.2f}')")%" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **[View Unit Tests Allure Report](https://<username>.github.io/<repo>/reports-output/${{ github.ref_name }}/allure-unit-report/index.html)**" >> $GITHUB_STEP_SUMMARY
+          echo "- 📝 **[View Unit Tests Allure Report](https://<username>.github.io/<repo>/reports-output/${{ github.ref_name }}/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
 
-          # echo "- 📝 **[View Coverage Report](https://<username>.github.io/<repo>/reports-output/coverage/index.html)**" >> $GITHUB_STEP_SUMMARY
 
       - name: Pull latest gh-pages branch
         if: always()
@@ -104,17 +102,17 @@ jobs:
       - name: Prepare GitHub Pages Reports
         if: always()
         run: |
-          mkdir -p reports-output/allure-unit-report
-          cp -r reports/allure-unit-report/* reports-output/allure-unit-report/
-          mkdir -p reports-output/coverage
-          cp -r reports/coverage/* reports-output/coverage/
-      
-      # 10.5 Push new reports to github pages
+          mkdir -p reports-output/${{ github.ref_name }}/allure-unit-report
+          cp -r reports/allure-unit-report/* reports-output/${{ github.ref_name }}/allure-unit-report/
+          mkdir -p reports-output/${{ github.ref_name }}/coverage
+          cp -r reports/coverage/* reports-output/${{ github.ref_name }}/coverage/
+
+        # 10.5 Push new reports to github pages
       - name: Commit and Push to GitHub Pages
         if: always()
         run: |
           git add reports-output/*
-          git commit -m "Update GitHub Pages reports [${{ github.sha }}]" || echo "No changes to commit"
+          git commit -m "Update GitHub Pages reports [${{ github.ref_name }}]" || echo "No changes to commit"
           git push origin gh-pages
       
       - name: 📬 Notify CI Status
