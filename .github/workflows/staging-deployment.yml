@@ -147,7 +147,7 @@ jobs:
       - name: Commit and Push to GitHub Pages
         if: always()
         run: |
-          git add gh-pages/*
+          git add reports-output/*
           git commit -m "Update GitHub Pages reports [${{ github.sha }}]" || echo "No changes to commit"
           git push origin gh-pages
 
