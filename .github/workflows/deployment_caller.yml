@@ -30,7 +30,7 @@ jobs:
           fi
 
       - name: Call Reusable Workflow
-        uses: ./.github/workflows/reusable-debug.yml
+        uses: aguilalv/cloudmailin/.github/workflows/reusable-deployment.yml@staging 
         with:
           environment: ${{ env.env_name }}
           service: ${{ env.service }}
