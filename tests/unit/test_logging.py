@@ -2,7 +2,7 @@ from unittest.mock import patch
 from cloudmailin import create_app
 import json
 import logging
-from cloudmailin.logging_setup import JSONFormatter
+from cloudmailin import JSONFormatter
 
 
 # --- Test Logging Initialization --- #

@@ -97,42 +97,30 @@ def test_store_email_adds_document(mock_firestore_client):
         # Assert: Verify the document is added to the collection
         mock_collection.add.assert_called_once_with(email_data)
 
-# @patch("cloudmailin.db.firestore.Client")
-# def test_store_email_logs_error_on_failure(mock_firestore_client, caplog):
-#     """
-#     Ensure store_email logs an error if Firestore raises an exception.
-#     """
-#     app = create_app({"TESTING": True})
-#
-#     with app.app_context():
-#         os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
-#
-#         # Step 2: Configure the cloudmailin logger for testing
-#         logger = logging.getLogger("cloudmailin")
-#         logger.propagate = True  # Ensure logs are propagated to the root logger
-#         logging.basicConfig(level=logging.ERROR)  # Set root logger level for capturing
-#         handler = logging.StreamHandler()
-#         handler.setLevel(logging.ERROR)
-#         logger.addHandler(handler)
-#
-#
-#         # Add a debug print to check the logger's handlers
-#         print("Handlers attached to logger:", logger.handlers)
-#
-#         # Arrange
-#         helper = DatabaseHelper(app.config)
-#         mock_collection = MagicMock()
-#         mock_collection.add.side_effect = Exception("Firestore error")
-#         mock_firestore_client.return_value.collection.return_value = mock_collection
-#
-#         email_data = {"sender": "test@example.com", "subject": "Hello World"}
-#
-#         # Act
-#         helper.store_email(email_data)
-#
-#         print("Captured records:", [record.message for record in caplog.records])
-#
-#         # Assert: Ensure the error was logged
-#         assert "Failed to store email in database: Firestore error" in caplog.text
-#
+@patch("cloudmailin.db.firestore.Client")
+def test_store_email_logs_error_on_failure(mock_firestore_client, caplog):
+     """
+     Ensure store_email logs an error if Firestore raises an exception.
+     """
+     app = create_app({"TESTING": True})
+
+     with app.app_context():
+         os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
+
+         # Arrange
+         helper = DatabaseHelper(app.config)
+         mock_collection = MagicMock()
+         mock_collection.add.side_effect = Exception("Firestore error")
+         mock_firestore_client.return_value.collection.return_value = mock_collection
+
+         email_data = {"sender": "test@example.com", "subject": "Hello World"}
+
+         # Act
+         helper.store_email(email_data)
+
+         print("Captured records:", [record.message for record in caplog.records])
+
+         # Assert: Ensure the error was logged
+         assert "Failed to store email in database: Firestore error" in caplog.text
+
 

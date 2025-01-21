@@ -26,7 +26,6 @@ class DatabaseHelper:
             collection = self.client.collection(collection_name)
             collection.add(email_data)
         except Exception as e:
-            print("Logger name:", current_app.logger.name)
             current_app.logger.error(f"Failed to store email in database: {e}", exc_info=True)
             
 
