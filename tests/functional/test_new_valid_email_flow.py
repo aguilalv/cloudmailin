@@ -1,7 +1,23 @@
 import json
 import pytest
 import requests
+from dotenv import load_dotenv
+from google.cloud import firestore
 
+# Load .env file
+load_dotenv()
+
+@pytest.fixture(scope="module")
+def test_firestore_collection():
+    """Fixture to return a Firestore collection for tests."""
+    collection_name = "test_emails"
+    db = firestore.Client()
+    collection = db.collection(collection_name)
+
+    # Clean up the collection before and after the test
+    yield collection
+    for doc in collection.stream():
+        doc.reference.delete()
 
 # Assuming valid_email_payload.json exists in the test_data directory
 @pytest.fixture
@@ -21,7 +37,7 @@ def valid_real_payload():
     ],
 )
 def test_email_processing_flow_with_handler(
-    base_url, valid_real_payload, caplog, handler_class
+    base_url, valid_real_payload, handler_class, test_firestore_collection
 ):
     """
     Functional test to verify end-to-end email processing flow:
@@ -59,4 +75,13 @@ def test_email_processing_flow_with_handler(
         f"Response: {response_data}"
     )
 
-    # TODO: Add a check that the message has been stored in a database
+    # Verify the email is stored in Firestore
+    docs = list(test_firestore_collection.stream())
+    assert len(docs) == 1  # Ensure one document is stored
+
+    stored_data = docs[0].to_dict()
+    assert stored_data["sender"] == valid_real_payload["envelope"]["from"]
+    assert stored_data["recipient"] == valid_real_payload["from"]
+    assert stored_data["subject"] == valid_real_payload["haders"]["subject"]
+    assert stored_data["plain"] == valid_real_payload["plain"]
+    assert stored_data["html"] == valid_real_payload["html"]

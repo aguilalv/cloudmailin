@@ -2,7 +2,7 @@ from typing import List, Callable
 from flask import current_app
 
 from cloudmailin.schemas import Email
-
+from cloudmailin.db import get_db
 
 # Define a type alias for step functions
 StepFunction = Callable[[Email], Email]
@@ -30,9 +30,14 @@ class BaseHandler:
             email = step(email)
 
         # Step 3: Store email in database
-        # TODO: Replace logger message with code to insert in database
-        current_app.logger.info(
-            f"Here I should store in database the email with subject {email.subject}"
-        )
+#        try:
+        db = get_db()
+        db.store_email(email.model_dump())
+        current_app.logger.info(f"Email stored in database: {email.subject}")
+#        except Exception as e:
+#            current_app.logger.error(
+#                f"Failed to store email in database: {e}", exc_info=True
+#            )
 
+        
         return email

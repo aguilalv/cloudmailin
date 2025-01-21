@@ -1,15 +1,42 @@
 import click
 
-from flask import g
+from flask import g, current_app
+import os
 
+from google.cloud import firestore
+
+class DatabaseHelper:
+    def __init__(self, config):
+        """
+        Initialize the Firestore client.
+        """
+        self.client = firestore.Client()
+        self.config = config
+        if self.config.get("TESTING", False):
+            self.collection_name = os.getenv("FIRESTORE_COLLECTION", "test_emails")
+        else:
+            self.collection_name = "emails"
+
+    def store_email(self, email_data):
+        """
+        Store an email document in the Firestore collection.
+        """
+        try:
+            collection_name = self.collection_name
+            collection = self.client.collection(collection_name)
+            collection.add(email_data)
+        except Exception as e:
+            print("Logger name:", current_app.logger.name)
+            current_app.logger.error(f"Failed to store email in database: {e}", exc_info=True)
+            
 
 def get_db():
     if "db" not in g:
+        g.db = DatabaseHelper(current_app.config)
         # g.db =sqlite3.connect(
         #    current_app.config["DATABASE"], detect_types=sqlite3.PARSE_DECLTYPES
         # )
         # g.db.row_factory = sqlite3.Row
-        pass
 
     return g.db
 
@@ -23,8 +50,8 @@ def close_db(e=None):
 
 
 def init_db():
+    """In a sql database this would clear the existing data and create new tables"""
     pass
-
 
 #    db = get_db()
 
@@ -34,7 +61,7 @@ def init_db():
 
 @click.command("init-db")
 def init_db_command():
-    """Clear the existing data and create new tables"""
+    """In a sql database this would clear the existing data and create new tables"""
     init_db()
     click.echo("Initialised the database")
 
