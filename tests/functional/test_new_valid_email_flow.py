@@ -7,6 +7,7 @@ from google.cloud import firestore
 # Load .env file
 load_dotenv()
 
+
 @pytest.fixture(scope="module")
 def test_firestore_collection():
     """Fixture to return a Firestore collection for tests."""
@@ -18,6 +19,7 @@ def test_firestore_collection():
     yield collection
     for doc in collection.stream():
         doc.reference.delete()
+
 
 # Assuming valid_email_payload.json exists in the test_data directory
 @pytest.fixture

@@ -5,6 +5,7 @@ import os
 
 from google.cloud import firestore
 
+
 class DatabaseHelper:
     def __init__(self, config):
         """
@@ -26,8 +27,10 @@ class DatabaseHelper:
             collection = self.client.collection(collection_name)
             collection.add(email_data)
         except Exception as e:
-            current_app.logger.error(f"Failed to store email in database: {e}", exc_info=True)
-            
+            current_app.logger.error(
+                f"Failed to store email in database: {e}", exc_info=True
+            )
+
 
 def get_db():
     if "db" not in g:
@@ -51,6 +54,7 @@ def close_db(e=None):
 def init_db():
     """In a sql database this would clear the existing data and create new tables"""
     pass
+
 
 #    db = get_db()
 

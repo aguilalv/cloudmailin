@@ -94,7 +94,9 @@ def test_base_handler_logs_email_stored_in_database(app, valid_flat_payload):
         expected_final_subject in storage_call[0].args[0]
     ), "Storage log did not include the final email subject."
 
+
 # --- Test database operations --- #
+
 
 @patch("cloudmailin.handlers.base_handler.get_db")
 def test_base_handler_stores_email_in_database(mock_get_db, app, valid_flat_payload):
@@ -116,8 +118,9 @@ def test_base_handler_stores_email_in_database(mock_get_db, app, valid_flat_payl
     # Assert the email was stored
     mock_db.store_email.assert_called_once_with(email.model_dump())
 
+
 @patch("cloudmailin.handlers.base_handler.get_db")
-def test_base_handler_stores_final_email_model(mock_get_db,app, valid_flat_payload):
+def test_base_handler_stores_final_email_model(mock_get_db, app, valid_flat_payload):
     """
     Test that the final modified email model is passed to the storage step to be stored in the database.
     """
@@ -137,16 +140,16 @@ def test_base_handler_stores_final_email_model(mock_get_db,app, valid_flat_paylo
 
     class TestHandler(BaseHandler):
         steps = [step_one, step_two]
-    
 
     handler = TestHandler()
 
     # Act
     with app.app_context():
         result = handler.handle(email)
-    
+
     # Assert
     # Assert the email with the modifications from the steps was stored
     mock_db.store_email.assert_called_once_with(result.model_dump())
+
 
 # --- Edge cases --- #

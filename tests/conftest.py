@@ -20,6 +20,7 @@ def pytest_addoption(parser):
         help="Base URL for the test environment",  # Description shown in help
     )
 
+
 # Fixture that gets auto-applied to all tests in this file
 # Mocks the firestore client to isolate these unit tests
 # from the actual service (e.g. avoids need for credentials)
@@ -30,6 +31,7 @@ def mock_firestore_client():
     """
     with patch("cloudmailin.db.firestore.Client") as mock_client:
         yield mock_client
+
 
 @pytest.fixture
 def base_url(request):

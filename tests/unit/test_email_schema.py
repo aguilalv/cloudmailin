@@ -92,7 +92,9 @@ def test_from_flat_data_creates_valid_email_from_valid_flat_payload(valid_flat_p
 # --- Preprocessing Tests: preprocess_payload --- #
 
 
-def test_preprocess_payload_flattens_and_parses_date_for_valid_input(valid_nested_payload):
+def test_preprocess_payload_flattens_and_parses_date_for_valid_input(
+    valid_nested_payload,
+):
     """
     Test preprocess_payload with valid nested payload.
 

@@ -30,14 +30,13 @@ class BaseHandler:
             email = step(email)
 
         # Step 3: Store email in database
-#        try:
+        #        try:
         db = get_db()
         db.store_email(email.model_dump())
         current_app.logger.info(f"Email stored in database: {email.subject}")
-#        except Exception as e:
-#            current_app.logger.error(
-#                f"Failed to store email in database: {e}", exc_info=True
-#            )
+        #        except Exception as e:
+        #            current_app.logger.error(
+        #                f"Failed to store email in database: {e}", exc_info=True
+        #            )
 
-        
         return email

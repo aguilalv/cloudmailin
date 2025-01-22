@@ -4,6 +4,7 @@ import json
 from datetime import datetime, UTC
 import os
 
+
 class JSONFormatter(logging.Formatter):
     """
     Custom JSON log formatter for structured logs.
@@ -16,6 +17,7 @@ class JSONFormatter(logging.Formatter):
             "message": record.getMessage(),
         }
         return json.dumps(log_record)
+
 
 def create_app(test_config=None):
     # Late import to ensure the function is patched correctly in tests.
