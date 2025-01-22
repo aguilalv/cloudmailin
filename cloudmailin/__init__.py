@@ -2,7 +2,7 @@ from flask import Flask, request
 import logging
 import json
 from datetime import datetime, UTC
-
+import os
 
 class JSONFormatter(logging.Formatter):
     """
@@ -43,14 +43,18 @@ def create_app(test_config=None):
     app.logger.info("Application starting...")
 
     # App Configuration
-    app.config.from_mapping(
-        SECRET_KEY="dev",
-    )
+    # Load default configuration from config.py file
+    app.config.from_object("cloudmailin.config.Config")
 
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
-    else:
+    # Override default configuration if a test configuration or an enviromnet variable
+    if test_config:
+        # Override with test configuration
         app.config.from_mapping(test_config)
+    else:
+        # Load environment-specific configuration
+        env_config = os.getenv("FLASK_ENV", "ProductionConfig")
+        app.config.from_object(f"cloudmailin.config.{env_config}")
+
 
     # Initialize and add handler registry to the app
     config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")

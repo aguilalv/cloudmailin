@@ -1,7 +1,8 @@
-from unittest.mock import patch
-
+from unittest.mock import mock_open, patch
 from cloudmailin.handler_registry import HandlerRegistry
 from cloudmailin import create_app
+from textwrap import dedent
+import os
 
 # from cloudmailin.config_loader import initialize_handler_registry_from_config
 
@@ -30,6 +31,56 @@ def test_create_app_initializes_handler_registry_correctly():
         ), "The handler_registry in app.config is not the mocked registry."
 
 
-def test_create_app_testing_flag_only_on_when_initialized():
-    assert not create_app().testing
-    assert create_app({"TESTING": True}).testing
+# def test_create_app_testing_flag_only_on_when_initialized():
+#     assert not create_app().testing
+#     assert create_app({"TESTING": True}).testing
+
+def test_app_uses_default_config_when_no_option_provided():
+    """
+    Ensure the app uses the default configuration when no test_config is provided.
+    """
+    # Act: Create app with no test_config
+    app = create_app()
+
+    # Assert: Verify default values from Config
+    #TODO: Check if it makes sense to change this test to get values from config.py?
+    assert app.config["DEBUG"] is False
+    assert app.config["TESTING"] is False
+    assert app.config["SECRET_KEY"] == "this-really-needs-to-be-changed"
+    
+def test_app_uses_testing_config():
+    """
+    Ensure the app uses the provided test configuration to override defaults.
+    """
+    # Arrange: Define a testing configuration
+    test_config = {
+        "TESTING": True,
+        "FIRESTORE_COLLECTION": "test_emails",
+        "SECRET_KEY": "test-secret",
+    }
+
+    # Act: Create app with test_config
+    app = create_app(test_config)
+
+    # Assert: Verify the configuration values match the test_config
+    assert app.config["TESTING"] is True
+    assert app.config["FIRESTORE_COLLECTION"] == "test_emails"
+    assert app.config["SECRET_KEY"] == "test-secret"
+
+    # Verify other defaults remain unchanged
+    assert app.config["DEBUG"] is False  # Default value not overridden
+
+def test_app_uses_environment_specific_config():
+    """
+    Ensure the app uses the appropriate configuration class based on FLASK_ENV.
+    """
+    # Arrange: Set the FLASK_ENV environment variable
+    with patch.dict(os.environ, {"FLASK_ENV": "UnitTestingConfig"}):
+        # Act: Create the app
+        app = create_app()
+
+    # Assert: Verify values specific to UnitTestingConfig
+    assert app.config["DEBUG"] is False
+    assert app.config["UNIT_TESTING"] is True
+    assert app.config["TESTING"] is True
+
