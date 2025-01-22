@@ -43,7 +43,7 @@ def app_factory():
     Factory for creating a Flask app with optional custom configuration.
     """
     def _create_app(custom_config=None):
-        config = {"TESTING": True}
+        config = {"TESTING": True, "FIRESTORE_COLLECTION": "test_dummy_collection"}
         if custom_config:
             config.update(custom_config)
         app = create_app(config)

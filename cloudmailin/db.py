@@ -13,10 +13,13 @@ class DatabaseHelper:
         """
         self.client = firestore.Client()
         self.config = config
-        if self.config.get("TESTING", False):
-            self.collection_name = os.getenv("FIRESTORE_COLLECTION", "test_emails")
-        else:
-            self.collection_name = "emails"
+
+        print(self.config)
+
+        # Validate FIRESTORE_COLLECTION presence in the config
+        self.collection_name = self.config.get("FIRESTORE_COLLECTION")
+        if not self.collection_name:
+            raise ValueError("FIRESTORE_COLLECTION is required but not configured.")
 
     def store_email(self, email_data):
         """

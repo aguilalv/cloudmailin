@@ -3,9 +3,24 @@ from cloudmailin.handler_registry import HandlerRegistry
 from cloudmailin import create_app
 from textwrap import dedent
 import os
+import pytest
+from cloudmailin.config import ProductionConfig, UnitTestingConfig, Config
 
-# from cloudmailin.config_loader import initialize_handler_registry_from_config
+@pytest.fixture
+def mock_config():
+    """
+    Mock the config module to provide specific configurations for unit tests.
+    """
+    mocked_config = {
+        "DEBUG": False,
+        "TESTING": False,
+        "FIRESTORE_COLLECTION": "test_emails",
+        "SECRET_KEY": "mock-secret-key",
+        "FUNCTIONAL_TESTING": False,
+    }
 
+    with patch("cloudmailin.config.Config", mocked_config):
+        yield mocked_config
 
 def test_create_app_initializes_handler_registry_correctly():
     """
@@ -30,12 +45,6 @@ def test_create_app_initializes_handler_registry_correctly():
             app.config["handler_registry"] is mock_registry
         ), "The handler_registry in app.config is not the mocked registry."
 
-
-# def test_create_app_testing_flag_only_on_when_initialized():
-#     assert not create_app().testing
-#     assert create_app({"TESTING": True}).testing
-
-
 def test_app_uses_default_config_when_no_option_provided():
     """
     Ensure the app uses the default configuration when no test_config is provided.
@@ -44,11 +53,9 @@ def test_app_uses_default_config_when_no_option_provided():
     app = create_app()
 
     # Assert: Verify default values from Config
-    # TODO: Check if it makes sense to change this test to get values from config.py?
-    assert app.config["DEBUG"] is False
-    assert app.config["TESTING"] is False
-    assert app.config["SECRET_KEY"] == "this-really-needs-to-be-changed"
-
+    for key in vars(Config):
+        if not key.startswith("_"):  # Ignore private/internal attributes
+            assert app.config[key] == getattr(Config, key), f"{key} does not match Config default"
 
 def test_app_uses_testing_config_when_provided():
     """
@@ -65,27 +72,34 @@ def test_app_uses_testing_config_when_provided():
     app = create_app(test_config)
 
     # Assert: Verify the configuration values match the test_config
-    assert app.config["TESTING"] is True
-    assert app.config["FIRESTORE_COLLECTION"] == "test_emails"
-    assert app.config["SECRET_KEY"] == "test-secret"
+    for key, value in test_config.items():
+        assert app.config[key] == value, f"{key} does not match provided value"
+
+
 
     # Verify other defaults remain unchanged
-    assert app.config["DEBUG"] is False  # Default value not overridden
+    for key, value in vars(Config).items():
+        if not key.startswith("_") and key not in test_config:
+            assert app.config[key] == value, f"{key} default not retained"
+
 
 
 def test_app_uses_environment_specific_config_configured_in_configpy():
     """
     Ensure the app uses the appropriate configuration class based on FLASK_ENV.
     """
-    # Arrange: Set the FLASK_ENV environment variable
-    with patch.dict(os.environ, {"FLASK_ENV": "UnitTestingConfig"}):
+    # Arrange: Dynamically set FLASK_ENV based on the class name
+    environment = UnitTestingConfig.__name__
+    with patch.dict(os.environ, {"FLASK_ENV": environment}):
         # Act: Create the app
         app = create_app()
 
-    # Assert: Verify values specific to UnitTestingConfig
-    assert app.config["DEBUG"] is False
-    assert app.config["UNIT_TESTING"] is True
-    assert app.config["TESTING"] is True
+    # Assert: Dynamically validate all attributes from UnitTestingConfig
+    expected_config_values = {
+        key: value for key, value in vars(UnitTestingConfig).items() if not key.startswith("_")
+    }
+    for key, expected_value in expected_config_values.items():
+        assert app.config[key] == expected_value, f"Config field {key} does not match."
 
 
 def test_app_defaults_to_production_config_if_flask_env_is_missing():
@@ -97,10 +111,13 @@ def test_app_defaults_to_production_config_if_flask_env_is_missing():
         # Act: Create the app
         app = create_app()
 
-    # Assert: Verify default values from ProductionConfig
-    assert app.config["DEBUG"] is False
-    assert app.config["TESTING"] is False
-    assert app.config["FIRESTORE_COLLECTION"] == "emails"  # Default collection
+    # Assert: Verify all fields match ProductionConfig
+    production_config_values = {
+        key: value for key, value in vars(ProductionConfig).items() if not key.startswith("_")
+    }
+    for key, expected_value in production_config_values.items():
+        assert app.config[key] == expected_value, f"Config field {key} does not match."
+
 
 
 def test_app_defaults_to_production_config_if_flask_env_is_invalid():
@@ -108,11 +125,14 @@ def test_app_defaults_to_production_config_if_flask_env_is_invalid():
     Ensure the app defaults to ProductionConfig when FLASK_ENV is invalid.
     """
     # Arrange: Set an invalid FLASK_ENV
-    with patch.dict(os.environ, {"FLASK_ENV": "InvalidConfig"}):
+    with patch.dict("os.environ", {"FLASK_ENV": "InvalidConfig"}):
         # Act: Create the app
         app = create_app()
 
-    # Assert: Verify default values from ProductionConfig
-    assert app.config["DEBUG"] is False
-    assert app.config["TESTING"] is False
-    assert app.config["FIRESTORE_COLLECTION"] == "emails"  # Default collection
+    # Assert: Verify all fields match ProductionConfig
+    production_config_values = {
+        key: value for key, value in vars(ProductionConfig).items() if not key.startswith("_")
+    }
+    for key, expected_value in production_config_values.items():
+        assert app.config[key] == expected_value, f"Config field {key} does not match."
+

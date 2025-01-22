@@ -1,6 +1,5 @@
 from flask import g, Flask
 from unittest.mock import patch, MagicMock
-import os
 import logging
 import pytest
 
@@ -56,16 +55,14 @@ def test_subsequent_calls_to_get_db_return_same_helper_instance(app_factory):
 # --- Tests for the database helper --- #
 
 
-@pytest.mark.xfail(reason="Firestore collection selection behavior is under review.")
 @patch("cloudmailin.db.firestore.Client")
-def test_store_email_uses_correct_collection(mock_firestore_client, app_factory):
+def test_store_email_uses_firestore_collection_from_config(mock_firestore_client, app_factory):
     """
     Ensure store_email adds data to the correct Firestore collection based on the environment.
     """
-    app = app_factory()
+    app = app_factory({"FIRESTORE_COLLECTION": "unit_test_emails"})
 
     with app.app_context():
-        os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
 
         # Arrange
         helper = DatabaseHelper(app.config)
@@ -87,11 +84,9 @@ def test_store_email_adds_document(mock_firestore_client, app_factory):
     """
     Ensure store_email adds the email document to the Firestore collection.
     """
-    app = app_factory()
+    app = app_factory({"FIRESTORE_COLLECTION": "custom_collection"})
 
     with app.app_context():
-        os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
-
         # Arrange
         helper = DatabaseHelper(app.config)
         mock_collection = MagicMock()
@@ -110,11 +105,9 @@ def test_store_email_logs_error_on_failure(mock_firestore_client, app_factory, c
     """
     Ensure store_email logs an error if Firestore raises an exception.
     """
-    app = app_factory()
+    app = app_factory({"FIRESTORE_COLLECTION": "custom_collection"})
 
     with app.app_context():
-        os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
-
         # Arrange
         helper = DatabaseHelper(app.config)
         mock_collection = MagicMock()
@@ -130,3 +123,18 @@ def test_store_email_logs_error_on_failure(mock_firestore_client, app_factory, c
 
         # Assert: Ensure the error was logged
         assert "Failed to store email in database: Firestore error" in caplog.text
+
+
+def test_missing_firestore_collection_raises_error(app_factory):
+    """
+    Test that DatabaseHelper raises a ValueError if FIRESTORE_COLLECTION is missing.
+    """
+    # Arrange: Create an app without FIRESTORE_COLLECTION in the config
+    #app = app_factory(custom_config={"TESTING": True})
+    app = app_factory(custom_config={"TESTING": True, "FIRESTORE_COLLECTION": None})
+
+    # Act & Assert: Attempting to initialize DatabaseHelper should raise ValueError
+    with app.app_context():
+        with pytest.raises(ValueError, match="FIRESTORE_COLLECTION is required but not configured."):
+            DatabaseHelper(app.config)
+
