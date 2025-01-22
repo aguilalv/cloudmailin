@@ -48,7 +48,7 @@ def test_app_uses_default_config_when_no_option_provided():
     assert app.config["TESTING"] is False
     assert app.config["SECRET_KEY"] == "this-really-needs-to-be-changed"
     
-def test_app_uses_testing_config():
+def test_app_uses_testing_config_when_provided():
     """
     Ensure the app uses the provided test configuration to override defaults.
     """
@@ -70,7 +70,7 @@ def test_app_uses_testing_config():
     # Verify other defaults remain unchanged
     assert app.config["DEBUG"] is False  # Default value not overridden
 
-def test_app_uses_environment_specific_config():
+def test_app_uses_environment_specific_config_configured_in_configpy():
     """
     Ensure the app uses the appropriate configuration class based on FLASK_ENV.
     """
@@ -84,3 +84,30 @@ def test_app_uses_environment_specific_config():
     assert app.config["UNIT_TESTING"] is True
     assert app.config["TESTING"] is True
 
+def test_app_defaults_to_production_config_if_flask_env_is_missing():
+    """
+    Ensure the app defaults to ProductionConfig when FLASK_ENV is not set.
+    """
+    # Arrange: Ensure FLASK_ENV is not set
+    with patch.dict(os.environ, {}, clear=True):
+        # Act: Create the app
+        app = create_app()
+
+    # Assert: Verify default values from ProductionConfig
+    assert app.config["DEBUG"] is False
+    assert app.config["TESTING"] is False
+    assert app.config["FIRESTORE_COLLECTION"] == "emails"  # Default collection
+
+def test_app_defaults_to_production_config_if_flask_env_is_invalid():
+    """
+    Ensure the app defaults to ProductionConfig when FLASK_ENV is invalid.
+    """
+    # Arrange: Set an invalid FLASK_ENV
+    with patch.dict(os.environ, {"FLASK_ENV": "InvalidConfig"}):
+        # Act: Create the app
+        app = create_app()
+
+    # Assert: Verify default values from ProductionConfig
+    assert app.config["DEBUG"] is False
+    assert app.config["TESTING"] is False
+    assert app.config["FIRESTORE_COLLECTION"] == "emails"  # Default collection

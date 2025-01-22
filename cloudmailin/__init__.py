@@ -53,8 +53,11 @@ def create_app(test_config=None):
     else:
         # Load environment-specific configuration
         env_config = os.getenv("FLASK_ENV", "ProductionConfig")
-        app.config.from_object(f"cloudmailin.config.{env_config}")
-
+        try:
+            app.config.from_object(f"cloudmailin.config.{env_config}")
+        except ImportError:
+            # Fallback to ProductionConfig if FLASK_ENV is invalid
+            app.config.from_object("cloudmailin.config.ProductionConfig")
 
     # Initialize and add handler registry to the app
     config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")
