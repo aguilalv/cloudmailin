@@ -6,12 +6,12 @@ import logging
 from cloudmailin import create_app, db
 from cloudmailin.db import DatabaseHelper
 
-def test_first_call_to_test_db_creates_and_stores_database_helper_in_g():
+def test_first_call_to_test_db_creates_and_stores_database_helper_in_g(app):
     """
     Test that the first call to get_db creates and stores the DatabaseHelper instance in Flask's g.
     """
     # Arrange
-    app = create_app({"TESTING": True, "FIRESTORE_COLLECTION": "test_emails"})
+#    app.config.update({"FIRESTORE_COLLECTION": "unit_test_emails"})
 
     with app.app_context():
         # Mock DatabaseHelper
@@ -27,12 +27,12 @@ def test_first_call_to_test_db_creates_and_stores_database_helper_in_g():
             assert g.db == mock_instance
 
 
-def test_subsequent_calls_to_get_db_return_same_helper_instance():
+def test_subsequent_calls_to_get_db_return_same_helper_instance(app):
     """
     Ensure get_db returns the same DatabaseHelper instance for subsequent calls.
     """
     # Arrange
-    app = create_app({"TESTING": True, "FIRESTORE_COLLECTION": "test_emails"})
+#    app.config.update({"FIRESTORE_COLLECTION": "unit_test_emails"})
 
     with app.app_context():
         # Mock DatabaseHelper
@@ -53,11 +53,10 @@ def test_subsequent_calls_to_get_db_return_same_helper_instance():
 # --- Tests for the database helper --- #
 
 @patch("cloudmailin.db.firestore.Client")
-def test_store_email_uses_correct_collection(mock_firestore_client):
+def test_store_email_uses_correct_collection(mock_firestore_client, app):
     """
     Ensure store_email adds data to the correct Firestore collection based on the environment.
     """
-    app = create_app({"TESTING": True})
 
     with app.app_context():
         os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
@@ -76,11 +75,10 @@ def test_store_email_uses_correct_collection(mock_firestore_client):
 
 
 @patch("cloudmailin.db.firestore.Client")
-def test_store_email_adds_document(mock_firestore_client):
+def test_store_email_adds_document(mock_firestore_client, app):
     """
     Ensure store_email adds the email document to the Firestore collection.
     """
-    app = create_app({"TESTING": True})
 
     with app.app_context():
         os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"
@@ -98,11 +96,10 @@ def test_store_email_adds_document(mock_firestore_client):
         mock_collection.add.assert_called_once_with(email_data)
 
 @patch("cloudmailin.db.firestore.Client")
-def test_store_email_logs_error_on_failure(mock_firestore_client, caplog):
+def test_store_email_logs_error_on_failure(mock_firestore_client, app, caplog):
      """
      Ensure store_email logs an error if Firestore raises an exception.
      """
-     app = create_app({"TESTING": True})
 
      with app.app_context():
          os.environ["FIRESTORE_COLLECTION"] = "unit_test_emails"

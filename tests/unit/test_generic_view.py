@@ -7,11 +7,10 @@ from cloudmailin.handler_registry import HandlerRegistry
 
 
 # --- Handler Registry Accesibility Tests --- #
-def test_access_handler_registry_in_view():
+def test_access_handler_registry_in_view(app):
     """
     Test that the handler registry can be accessed via app context.
     """
-    app = create_app()
     with app.app_context():
         registry = current_app.config["handler_registry"]
         assert isinstance(registry, HandlerRegistry)

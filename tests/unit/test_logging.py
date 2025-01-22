@@ -8,7 +8,7 @@ from cloudmailin import JSONFormatter
 # --- Test Logging Initialization --- #
 
 
-def test_logging_initialization():
+def test_logging_initialization_message_logged():
     """
     Test that the app logs a startup message during initialization.
     """

@@ -30,6 +30,6 @@ def test_create_app_initializes_handler_registry_correctly():
         ), "The handler_registry in app.config is not the mocked registry."
 
 
-def test_config():
+def test_create_app_testing_flag_only_on_when_initialized():
     assert not create_app().testing
     assert create_app({"TESTING": True}).testing
