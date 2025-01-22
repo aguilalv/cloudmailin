@@ -15,10 +15,11 @@ from cloudmailin.handler_registry import (
 # --- Test Initialization and Integration with app context --- #
 
 
-def test_app_initializes_with_handler_registry(app):
+def test_app_initializes_with_handler_registry(app_factory):
     """
     Test that the app initializes with a handler registry in its config.
     """
+    app = app_factory()
     assert "handler_registry" in app.config
     assert app.config["handler_registry"] is not None
     assert isinstance(app.config["handler_registry"], HandlerRegistry)
@@ -157,10 +158,12 @@ def test_load_invalid_yaml_configs(valid_yaml_config, invalid_part, modification
 # --- Test config initialization --- #
 
 
-def test_initialize_handler_registry_from_config(valid_yaml_config, app):
+def test_initialize_handler_registry_from_config(valid_yaml_config, app_factory):
     """
     Test that the handler registry is initialized correctly from the YAML configuration.
     """
+    app = app_factory()
+
     with patch("builtins.open", mock_open(read_data=valid_yaml_config)):
         registry = initialize_handler_registry_from_config("dummy_handler_config.yaml")
 

@@ -7,10 +7,12 @@ from cloudmailin.handler_registry import HandlerRegistry
 
 
 # --- Handler Registry Accesibility Tests --- #
-def test_access_handler_registry_in_view(app):
+def test_access_handler_registry_in_view(app_factory):
     """
     Test that the handler registry can be accessed via app context.
     """
+    app = app_factory()
+
     with app.app_context():
         registry = current_app.config["handler_registry"]
         assert isinstance(registry, HandlerRegistry)
@@ -19,10 +21,11 @@ def test_access_handler_registry_in_view(app):
 # --- Valid Request Tests --- #
 
 
-def test_generic_view_selects_correct_handler(client, app, valid_email_data):
+def test_generic_view_selects_correct_handler(app_factory, valid_email_data):
     """
     Test that the correct handler is selected based on the sender.
     """
+    app = app_factory()
     valid_email_data["envelope"]["from"] = "specific_sender@example.com"
 
     with app.app_context():
@@ -32,23 +35,26 @@ def test_generic_view_selects_correct_handler(client, app, valid_email_data):
         MockHandler = type("MockHandler", (), {"handle": Mock()})
 
         handler_registry.register("specific_sender@example.com", MockHandler)
+        
+        # Explicitly bind the test client to the app context
+        with app.test_client() as client:
+            # Spy on `get_handler_for_sender` to verify selection
+            with patch.object(
+                handler_registry,
+                "get_handler_for_sender",
+                wraps=handler_registry.get_handler_for_sender,
+            ) as mock_get_handler:
+                client.post("/generic/new", json=valid_email_data)
 
-        # Spy on `get_handler_for_sender` to verify selection
-        with patch.object(
-            handler_registry,
-            "get_handler_for_sender",
-            wraps=handler_registry.get_handler_for_sender,
-        ) as mock_get_handler:
-            client.post("/generic/new", json=valid_email_data)
-
-            # Assert the handler selection logic
-            mock_get_handler.assert_called_once_with("specific_sender@example.com")
+                # Assert the handler selection logic
+                mock_get_handler.assert_called_once_with("specific_sender@example.com")
 
 
-def test_generic_view_calls_handler_handle(client, app, valid_email_data):
+def test_generic_view_calls_handler_handle(app_factory, valid_email_data):
     """
     Test that the selected handler's handle method is called with the Email object.
     """
+    app = app_factory()
 
     with app.app_context():
         handler_registry = app.config["handler_registry"]
@@ -56,8 +62,9 @@ def test_generic_view_calls_handler_handle(client, app, valid_email_data):
         # Create a mock handler class with a 'handle' method
         MockHandler = type("MockHandler", (), {"handle": Mock()})
         handler_registry.register(valid_email_data["envelope"]["from"], MockHandler)
-
-    client.post("/generic/new", json=valid_email_data)
+        
+        with app.test_client() as client:
+            client.post("/generic/new", json=valid_email_data)
 
     MockHandler.handle.assert_called_once()
 
@@ -74,10 +81,11 @@ def test_generic_view_valid_payload_returns_200(client, valid_email_data):
     assert response.status_code == 200
 
 
-def test_generic_view_returns_status_and_handler(client, app, valid_email_data):
+def test_generic_view_returns_status_and_handler(app_factory, valid_email_data):
     """
     Test that the correct response is returned, including status and handler fields.
     """
+    app = app_factory()
     valid_email_data["envelope"]["from"] = "specific_sender@example.com"
 
     with app.app_context():
@@ -87,9 +95,11 @@ def test_generic_view_returns_status_and_handler(client, app, valid_email_data):
         MockHandler = type("MockHandler", (), {"handle": Mock()})
         handler_registry.register("specific_sender@example.com", MockHandler)
 
-    # Act: Send the payload and capture the response
-    response = client.post("/generic/new", json=valid_email_data)
-    data = response.get_json()
+        # Explicitly bind the test client to the app context
+        with app.test_client() as client:
+            # Act: Send the payload and capture the response
+            response = client.post("/generic/new", json=valid_email_data)
+            data = response.get_json()
 
     # Assert: Check the response data
     assert data == {

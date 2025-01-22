@@ -34,13 +34,14 @@ def test_campaign_classifier_handler_has_correct_steps():
     ],
 )
 def test_campaign_classifier_handler_integration(
-    app, valid_flat_payload, field, value, expected_campaign_type
+    app_factory, valid_flat_payload, field, value, expected_campaign_type
 ):
     """
     Integration test to verify that CampaignClassifierHandler processes an Email object correctly,
     assigning campaign_type based on a dynamic field while leaving other fields untouched.
     """
     # Arrange
+    app = app_factory()
     email = Email.from_flat_data(**valid_flat_payload)
     setattr(email, field, value)  # Dynamically set the field
     original_email = email.model_copy()  # Create a copy for comparison

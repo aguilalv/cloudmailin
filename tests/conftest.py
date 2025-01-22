@@ -37,20 +37,26 @@ def mock_firestore_client():
 def base_url(request):
     return request.config.getoption("--base-url")
 
+@pytest.fixture
+def app_factory():
+    """
+    Factory for creating a Flask app with optional custom configuration.
+    """
+    def _create_app(custom_config=None):
+        config = {"TESTING": True}
+        if custom_config:
+            config.update(custom_config)
+        app = create_app(config)
+        with app.app_context():
+            return app
+
+    return _create_app
+
 
 @pytest.fixture
-def app():
-    #    db_fd, db_path = tempfile.mkstemp(
-
-    app = create_app({"TESTING": True})
-    with app.app_context():
-        yield app
-
-
-@pytest.fixture
-def client(app):
+def client(app_factory):
+    app = app_factory()
     return app.test_client()
-
 
 @pytest.fixture
 def runner(app):

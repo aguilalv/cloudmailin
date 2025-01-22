@@ -7,31 +7,35 @@ import pytest
 # --- Test logging behaviour --- #
 
 
-def test_base_handler_logs_health_message(valid_flat_payload, app):
+def test_base_handler_logs_health_message(valid_flat_payload, app_factory):
     """
     Test that BaseHandler logs a health-related message when handling an email.
     """
+    app = app_factory()
     email = Email.from_flat_data(**valid_flat_payload)
     handler = BaseHandler()
 
-    with patch.object(app.logger, "info") as mock_logger:
-        handler.handle(email)
-        expected_message = (
-            f"[{handler.__class__.__name__}] Processing email from sender@example.com"
-        )
-        mock_logger.assert_any_call(expected_message)
+    with app.app_context():
+        with patch.object(app.logger, "info") as mock_logger:
+            handler.handle(email)
+            expected_message = (
+                f"[{handler.__class__.__name__}] Processing email from sender@example.com"
+            )
+            mock_logger.assert_any_call(expected_message)
 
 
 # --- Test basic operations and step execution --- #
 
 
-def test_base_handler_executes_steps_in_order(valid_flat_payload, app):
+def test_base_handler_executes_steps_in_order(valid_flat_payload, app_factory):
     """
     Test that BaseHandler executes steps in the correct order,
     passing the modified email object through each step.
     """
 
     # Arrange
+    app = app_factory()
+
     def step_one(email):
         email.subject += " Step1"
         return email
@@ -54,10 +58,13 @@ def test_base_handler_executes_steps_in_order(valid_flat_payload, app):
     assert result.subject == "Test Subject Step1 Step2"
 
 
-def test_base_handler_logs_email_stored_in_database(app, valid_flat_payload):
+def test_base_handler_logs_email_stored_in_database(app_factory, valid_flat_payload):
     """
     Test that the final modified email model is passed to the storage step to be stored in the database.
     """
+    #Arrange
+    app = app_factory()
+    
     email = Email.from_flat_data(**valid_flat_payload)
 
     # Define two sample steps to modify the email
@@ -74,8 +81,9 @@ def test_base_handler_logs_email_stored_in_database(app, valid_flat_payload):
 
     handler = TestHandler()
 
-    with patch.object(app.logger, "info") as mock_logger:
-        result = handler.handle(email)
+    with app.app_context():
+        with patch.object(app.logger, "info") as mock_logger:
+            result = handler.handle(email)
 
     # Assert that the storage log was called with the final modified email
     expected_final_subject = "Test Subject Step1 Step2"
@@ -99,11 +107,13 @@ def test_base_handler_logs_email_stored_in_database(app, valid_flat_payload):
 
 
 @patch("cloudmailin.handlers.base_handler.get_db")
-def test_base_handler_stores_email_in_database(mock_get_db, app, valid_flat_payload):
+def test_base_handler_stores_email_in_database(mock_get_db, app_factory, valid_flat_payload):
     """
     Test that BaseHandler stores the final email in the database.
     """
     # Arrange
+    app = app_factory()
+    
     email = Email.from_flat_data(**valid_flat_payload)
     mock_db = MagicMock()
     mock_get_db.return_value = mock_db
@@ -120,11 +130,13 @@ def test_base_handler_stores_email_in_database(mock_get_db, app, valid_flat_payl
 
 
 @patch("cloudmailin.handlers.base_handler.get_db")
-def test_base_handler_stores_final_email_model(mock_get_db, app, valid_flat_payload):
+def test_base_handler_stores_final_email_model(mock_get_db, app_factory, valid_flat_payload):
     """
     Test that the final modified email model is passed to the storage step to be stored in the database.
     """
     # Arrange
+    app = app_factory()
+    
     email = Email.from_flat_data(**valid_flat_payload)
     mock_db = MagicMock()
     mock_get_db.return_value = mock_db
