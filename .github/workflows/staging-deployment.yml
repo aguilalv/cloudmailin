@@ -80,17 +80,8 @@ jobs:
           pip install allure-pytest
 
       # C. Run functional tests with Allure results
-      - name: Write GCP Service Account Key to File
-        run: |
-          echo "${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}" > /tmp/staging-key.json
-          sed -i 's/^"//;s/"$//' /tmp/staging-key.json
-          cat /tmp/staging-key.json | jq . # Optional: Validate JSON formatting
-        shell: bash
-
-      # C. Run functional tests with Allure results
       - name: Run functional tests
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/staging-key.json"
           FLASK_ENV=FunctionalTestingConfig pytest tests/functional \
                  --base-url=${{ env.BASE_URL }} \
                  --junitxml=reports/functional-tests.xml \
