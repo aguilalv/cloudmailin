@@ -82,7 +82,8 @@ jobs:
       # C. Run functional tests with Allure results
       - name: Run functional tests
         run: |
-          FLASK_ENV=FunctionalTestingConfig pytest tests/functional \
+          export FLASK_ENV=FunctionalTestingConfig
+          pytest tests/functional \
                  --base-url=${{ env.BASE_URL }} \
                  --junitxml=reports/functional-tests.xml \
                  --html=reports/functional-tests-report.html \
