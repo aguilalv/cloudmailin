@@ -45,21 +45,17 @@ def create_app(test_config=None):
     app.logger.info("Application starting...")
 
     # App Configuration
-    # Load default configuration from config.py file
-    app.config.from_object("cloudmailin.config.Config")
-
+    # Load environment-specific configuration (ProductionConfig is the default)
+    env_config = os.getenv("FLASK_ENV", "ProductionConfig")
+    try:
+        app.config.from_object(f"cloudmailin.config.{env_config}")
+    except ImportError:
+        # Fallback to ProductionConfig if FLASK_ENV is invalid
+        app.config.from_object("cloudmailin.config.ProductionConfig")
     # Override default configuration if a test configuration or an enviromnet variable
     if test_config:
         # Override with test configuration
         app.config.from_mapping(test_config)
-    else:
-        # Load environment-specific configuration
-        env_config = os.getenv("FLASK_ENV", "ProductionConfig")
-        try:
-            app.config.from_object(f"cloudmailin.config.{env_config}")
-        except ImportError:
-            # Fallback to ProductionConfig if FLASK_ENV is invalid
-            app.config.from_object("cloudmailin.config.ProductionConfig")
 
     # Initialize and add handler registry to the app
     config_path = app.config.get("HANDLER_CONFIG_PATH", "config/handler_config.yaml")

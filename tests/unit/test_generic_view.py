@@ -35,7 +35,7 @@ def test_generic_view_selects_correct_handler(app_factory, valid_email_data):
         MockHandler = type("MockHandler", (), {"handle": Mock()})
 
         handler_registry.register("specific_sender@example.com", MockHandler)
-        
+
         # Explicitly bind the test client to the app context
         with app.test_client() as client:
             # Spy on `get_handler_for_sender` to verify selection
@@ -62,7 +62,7 @@ def test_generic_view_calls_handler_handle(app_factory, valid_email_data):
         # Create a mock handler class with a 'handle' method
         MockHandler = type("MockHandler", (), {"handle": Mock()})
         handler_registry.register(valid_email_data["envelope"]["from"], MockHandler)
-        
+
         with app.test_client() as client:
             client.post("/generic/new", json=valid_email_data)
 

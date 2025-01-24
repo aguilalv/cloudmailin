@@ -14,8 +14,6 @@ class DatabaseHelper:
         self.client = firestore.Client()
         self.config = config
 
-        print(self.config)
-
         # Validate FIRESTORE_COLLECTION presence in the config
         self.collection_name = self.config.get("FIRESTORE_COLLECTION")
         if not self.collection_name:

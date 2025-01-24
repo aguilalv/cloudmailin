@@ -6,6 +6,7 @@ import os
 import pytest
 from cloudmailin.config import ProductionConfig, UnitTestingConfig, Config
 
+
 @pytest.fixture
 def mock_config():
     """
@@ -21,6 +22,7 @@ def mock_config():
 
     with patch("cloudmailin.config.Config", mocked_config):
         yield mocked_config
+
 
 def test_create_app_initializes_handler_registry_correctly():
     """
@@ -45,6 +47,7 @@ def test_create_app_initializes_handler_registry_correctly():
             app.config["handler_registry"] is mock_registry
         ), "The handler_registry in app.config is not the mocked registry."
 
+
 def test_app_uses_default_config_when_no_option_provided():
     """
     Ensure the app uses the default configuration when no test_config is provided.
@@ -55,7 +58,10 @@ def test_app_uses_default_config_when_no_option_provided():
     # Assert: Verify default values from Config
     for key in vars(Config):
         if not key.startswith("_"):  # Ignore private/internal attributes
-            assert app.config[key] == getattr(Config, key), f"{key} does not match Config default"
+            assert app.config[key] == getattr(
+                Config, key
+            ), f"{key} does not match Config default"
+
 
 def test_app_uses_testing_config_when_provided():
     """
@@ -75,13 +81,10 @@ def test_app_uses_testing_config_when_provided():
     for key, value in test_config.items():
         assert app.config[key] == value, f"{key} does not match provided value"
 
-
-
     # Verify other defaults remain unchanged
     for key, value in vars(Config).items():
         if not key.startswith("_") and key not in test_config:
             assert app.config[key] == value, f"{key} default not retained"
-
 
 
 def test_app_uses_environment_specific_config_configured_in_configpy():
@@ -96,7 +99,9 @@ def test_app_uses_environment_specific_config_configured_in_configpy():
 
     # Assert: Dynamically validate all attributes from UnitTestingConfig
     expected_config_values = {
-        key: value for key, value in vars(UnitTestingConfig).items() if not key.startswith("_")
+        key: value
+        for key, value in vars(UnitTestingConfig).items()
+        if not key.startswith("_")
     }
     for key, expected_value in expected_config_values.items():
         assert app.config[key] == expected_value, f"Config field {key} does not match."
@@ -113,11 +118,12 @@ def test_app_defaults_to_production_config_if_flask_env_is_missing():
 
     # Assert: Verify all fields match ProductionConfig
     production_config_values = {
-        key: value for key, value in vars(ProductionConfig).items() if not key.startswith("_")
+        key: value
+        for key, value in vars(ProductionConfig).items()
+        if not key.startswith("_")
     }
     for key, expected_value in production_config_values.items():
         assert app.config[key] == expected_value, f"Config field {key} does not match."
-
 
 
 def test_app_defaults_to_production_config_if_flask_env_is_invalid():
@@ -131,8 +137,9 @@ def test_app_defaults_to_production_config_if_flask_env_is_invalid():
 
     # Assert: Verify all fields match ProductionConfig
     production_config_values = {
-        key: value for key, value in vars(ProductionConfig).items() if not key.startswith("_")
+        key: value
+        for key, value in vars(ProductionConfig).items()
+        if not key.startswith("_")
     }
     for key, expected_value in production_config_values.items():
         assert app.config[key] == expected_value, f"Config field {key} does not match."
-

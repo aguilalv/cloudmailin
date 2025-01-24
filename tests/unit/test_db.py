@@ -56,7 +56,9 @@ def test_subsequent_calls_to_get_db_return_same_helper_instance(app_factory):
 
 
 @patch("cloudmailin.db.firestore.Client")
-def test_store_email_uses_firestore_collection_from_config(mock_firestore_client, app_factory):
+def test_store_email_uses_firestore_collection_from_config(
+    mock_firestore_client, app_factory
+):
     """
     Ensure store_email adds data to the correct Firestore collection based on the environment.
     """
@@ -130,11 +132,12 @@ def test_missing_firestore_collection_raises_error(app_factory):
     Test that DatabaseHelper raises a ValueError if FIRESTORE_COLLECTION is missing.
     """
     # Arrange: Create an app without FIRESTORE_COLLECTION in the config
-    #app = app_factory(custom_config={"TESTING": True})
+    # app = app_factory(custom_config={"TESTING": True})
     app = app_factory(custom_config={"TESTING": True, "FIRESTORE_COLLECTION": None})
 
     # Act & Assert: Attempting to initialize DatabaseHelper should raise ValueError
     with app.app_context():
-        with pytest.raises(ValueError, match="FIRESTORE_COLLECTION is required but not configured."):
+        with pytest.raises(
+            ValueError, match="FIRESTORE_COLLECTION is required but not configured."
+        ):
             DatabaseHelper(app.config)
-

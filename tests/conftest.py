@@ -25,23 +25,29 @@ def pytest_addoption(parser):
 # Mocks the firestore client to isolate these unit tests
 # from the actual service (e.g. avoids need for credentials)
 @pytest.fixture(autouse=True)
-def mock_firestore_client():
+def mock_firestore_client(request):
     """
-    Automatically mock the Firestore client for all tests.
+    Automatically mock the Firestore client for all tests, except functional tests.
     """
-    with patch("cloudmailin.db.firestore.Client") as mock_client:
-        yield mock_client
+    # Skip mocking if the test is marked as functional
+    if "functional" in request.node.keywords:
+        yield  # No mocking, proceed with the real client
+    else:
+        with patch("cloudmailin.db.firestore.Client") as mock_client:
+            yield mock_client
 
 
 @pytest.fixture
 def base_url(request):
     return request.config.getoption("--base-url")
 
+
 @pytest.fixture
 def app_factory():
     """
     Factory for creating a Flask app with optional custom configuration.
     """
+
     def _create_app(custom_config=None):
         config = {"TESTING": True, "FIRESTORE_COLLECTION": "test_dummy_collection"}
         if custom_config:
@@ -57,6 +63,7 @@ def app_factory():
 def client(app_factory):
     app = app_factory()
     return app.test_client()
+
 
 @pytest.fixture
 def runner(app):

@@ -18,9 +18,7 @@ def test_base_handler_logs_health_message(valid_flat_payload, app_factory):
     with app.app_context():
         with patch.object(app.logger, "info") as mock_logger:
             handler.handle(email)
-            expected_message = (
-                f"[{handler.__class__.__name__}] Processing email from sender@example.com"
-            )
+            expected_message = f"[{handler.__class__.__name__}] Processing email from sender@example.com"
             mock_logger.assert_any_call(expected_message)
 
 
@@ -62,9 +60,9 @@ def test_base_handler_logs_email_stored_in_database(app_factory, valid_flat_payl
     """
     Test that the final modified email model is passed to the storage step to be stored in the database.
     """
-    #Arrange
+    # Arrange
     app = app_factory()
-    
+
     email = Email.from_flat_data(**valid_flat_payload)
 
     # Define two sample steps to modify the email
@@ -107,13 +105,15 @@ def test_base_handler_logs_email_stored_in_database(app_factory, valid_flat_payl
 
 
 @patch("cloudmailin.handlers.base_handler.get_db")
-def test_base_handler_stores_email_in_database(mock_get_db, app_factory, valid_flat_payload):
+def test_base_handler_stores_email_in_database(
+    mock_get_db, app_factory, valid_flat_payload
+):
     """
     Test that BaseHandler stores the final email in the database.
     """
     # Arrange
     app = app_factory()
-    
+
     email = Email.from_flat_data(**valid_flat_payload)
     mock_db = MagicMock()
     mock_get_db.return_value = mock_db
@@ -130,13 +130,15 @@ def test_base_handler_stores_email_in_database(mock_get_db, app_factory, valid_f
 
 
 @patch("cloudmailin.handlers.base_handler.get_db")
-def test_base_handler_stores_final_email_model(mock_get_db, app_factory, valid_flat_payload):
+def test_base_handler_stores_final_email_model(
+    mock_get_db, app_factory, valid_flat_payload
+):
     """
     Test that the final modified email model is passed to the storage step to be stored in the database.
     """
     # Arrange
     app = app_factory()
-    
+
     email = Email.from_flat_data(**valid_flat_payload)
     mock_db = MagicMock()
     mock_get_db.return_value = mock_db
