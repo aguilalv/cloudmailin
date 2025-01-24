@@ -82,7 +82,9 @@ jobs:
       # C. Run functional tests with Allure results
       - name: Run functional tests
         run: |
-          pytest tests/functional \
+          echo "${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}" > /tmp/staging-key.json
+          export GOOGLE_APPLICATION_CREDENTIALS="/tmp/staging-key.json"
+          FLASK_ENV=FunctionalTestingConfig pytest tests/functional \
                  --base-url=${{ env.BASE_URL }} \
                  --junitxml=reports/functional-tests.xml \
                  --html=reports/functional-tests-report.html \
