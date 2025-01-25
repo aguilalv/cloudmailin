@@ -62,6 +62,7 @@ jobs:
             --region=$REGION \
             --platform=managed \
             --allow-unauthenticated \
+            --set-env-vars=FLASK_ENV=StagingConfig \
             --quiet
 
       # --- Post deployment tests ---
