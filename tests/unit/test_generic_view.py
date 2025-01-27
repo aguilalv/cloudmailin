@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import patch, Mock
 from flask import current_app
 
-from cloudmailin import create_app
 from cloudmailin.handler_registry import HandlerRegistry
 
 

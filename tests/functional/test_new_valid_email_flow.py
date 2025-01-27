@@ -3,9 +3,6 @@ import pytest
 import requests
 from dotenv import load_dotenv
 from google.cloud import firestore
-import os
-
-from cloudmailin.config import FunctionalTestingConfig
 
 # Load .env file
 load_dotenv()

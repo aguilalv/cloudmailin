@@ -1,10 +1,9 @@
-from unittest.mock import mock_open, patch
+from unittest.mock import patch
 from cloudmailin.handler_registry import HandlerRegistry
-from cloudmailin import create_app
-from textwrap import dedent
 import os
 import pytest
 from cloudmailin.config import ProductionConfig, UnitTestingConfig, Config
+from cloudmailin import create_app
 
 
 @pytest.fixture

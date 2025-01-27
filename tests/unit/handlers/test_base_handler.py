@@ -1,7 +1,6 @@
 from unittest.mock import patch, MagicMock
 from cloudmailin.handlers.base_handler import BaseHandler
 from cloudmailin.schemas import Email
-import pytest
 
 
 # --- Test logging behaviour --- #
@@ -122,7 +121,7 @@ def test_base_handler_stores_email_in_database(
 
     # Act
     with app.app_context():
-        result = handler.handle(email)
+        handler.handle(email)
 
     # Assert
     # Assert the email was stored

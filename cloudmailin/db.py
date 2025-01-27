@@ -1,7 +1,6 @@
 import click
 
 from flask import g, current_app
-import os
 
 from google.cloud import firestore
 

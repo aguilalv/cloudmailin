@@ -1,9 +1,8 @@
-from flask import g, Flask
+from flask import g
 from unittest.mock import patch, MagicMock
-import logging
 import pytest
 
-from cloudmailin import create_app, db
+from cloudmailin import db
 from cloudmailin.db import DatabaseHelper
 
 

@@ -162,7 +162,7 @@ def test_initialize_handler_registry_from_config(valid_yaml_config, app_factory)
     """
     Test that the handler registry is initialized correctly from the YAML configuration.
     """
-    app = app_factory()
+    # app = app_factory()
 
     with patch("builtins.open", mock_open(read_data=valid_yaml_config)):
         registry = initialize_handler_registry_from_config("dummy_handler_config.yaml")
