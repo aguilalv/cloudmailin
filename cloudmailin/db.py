@@ -19,19 +19,26 @@ class DatabaseHelper:
         if not self.collection_name:
             raise ValueError("FIRESTORE_COLLECTION is required but not configured.")
 
+    def get_collection(self):
+        """
+        Get the Firestore collection, overriding it if the request context provides one.
+        """
+        collection_override = getattr(g, "firestore_collection", None)
+        if collection_override:
+            return self.client.collection(collection_override)
+        return self.client.collection(self.collection_name)
+
     def store_email(self, email_data):
         """
         Store an email document in the Firestore collection.
         """
         try:
-            collection_name = self.collection_name
-            collection = self.client.collection(collection_name)
+            collection = self.get_collection()
             collection.add(email_data)
         except Exception as e:
             current_app.logger.error(
                 f"Failed to store email in database: {e}", exc_info=True
             )
-
 
 def get_db():
     if "db" not in g:

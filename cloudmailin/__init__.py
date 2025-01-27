@@ -77,6 +77,19 @@ def create_app(test_config=None):
         """
         app.logger.info(f"Received request: {request.method} {request.path}")
 
+    @app.before_request
+    def set_firestore_collection():
+        """
+        Check for a custom Firestore collection in the request headers.
+        Set it in g if present.
+        """
+        custom_collection = request.headers.get("X-Firestore-Collection")
+        if custom_collection:
+            g.firestore_collection = custom_collection
+            app.logger.info(f"Overriding Firestore collection to: {custom_collection}")
+
+
+
     # Register Blueprints
     from . import generic, health
 
