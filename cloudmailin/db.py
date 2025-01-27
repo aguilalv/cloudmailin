@@ -11,7 +11,8 @@ class DatabaseHelper:
         """
         Initialize the Firestore client.
         """
-        self.client = firestore.Client()
+        self.database_name = config.get("FIRESTORE_DATABASE", "cloudmailin")
+        self.client = firestore.Client(database=self.database_name)
         self.config = config
 
         # Validate FIRESTORE_COLLECTION presence in the config

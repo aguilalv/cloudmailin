@@ -19,35 +19,6 @@ def valid_real_payload():
     with open("tests/functional/test_data/valid_email_payload.json") as f:
         return json.load(f)
 
-@pytest.fixture(scope="module")
-def functional_firestore_collection():
-    """Fixture to clean up the Firestore collection before and after the test."""
-    collection_name = FunctionalTestingConfig.FIRESTORE_COLLECTION
-    db = firestore.Client()
-    collection = db.collection(collection_name)
-
-    # Clean up before the test
-#    for doc in collection.stream():
-#       doc.reference.delete()
-
-    yield collection
-
-    # Clean up after the test
-
-
-#    for doc in collection.stream():
-#        doc.reference.delete()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def validate_functional_env():
-    flask_env = os.getenv("FLASK_ENV")
-    if flask_env != "FunctionalTestingConfig":
-        raise RuntimeError(
-            f"Functional tests require FLASK_ENV=FunctionalTestingConfig, but got {flask_env or 'None'}."
-        )
-
-
 @pytest.mark.parametrize(
     "handler_class",
     [
@@ -71,16 +42,20 @@ def test_email_processing_flow_with_handler(
     valid_real_payload["envelope"]["from"] = sender
 
     # Setup Firestore client and collection
-    db = firestore.Client()
-    collection_name = os.getenv("FIRESTORE_COLLECTION", "functional_test_emails")
+    database_name = "cloudmailin"
+    db = firestore.Client(database=database_name)
+    collection_name = "functional_test_emails"
     collection = db.collection(collection_name)
 
     # Cleanup before the test
     for doc in collection.stream():
         doc.reference.delete()
 
+    # Add header to indicate functional test and override Firestore collection
+    headers = {"X-Firestore-Collection": collection_name}
+
     # Act: Send the payload
-    response = requests.post(endpoint, json=valid_real_payload)
+    response = requests.post(endpoint, json=valid_real_payload, headers=headers)
 
     # Assert: Verify the response
     assert (
