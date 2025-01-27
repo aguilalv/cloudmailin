@@ -41,6 +41,7 @@ class DatabaseHelper:
                 f"Failed to store email in database: {e}", exc_info=True
             )
 
+
 def get_db():
     if "db" not in g:
         g.db = DatabaseHelper(current_app.config)

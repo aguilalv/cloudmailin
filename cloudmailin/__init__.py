@@ -83,7 +83,7 @@ def create_app(test_config=None):
         Check for a custom Firestore collection in the request headers.
         Set it in g if present.
         """
-        custom_collection = request.headers.get("X-Firestore-Collection",None)
+        custom_collection = request.headers.get("X-Firestore-Collection", None)
         if custom_collection:
             g.firestore_collection = custom_collection
             app.logger.info(f"Overriding Firestore collection to: {custom_collection}")

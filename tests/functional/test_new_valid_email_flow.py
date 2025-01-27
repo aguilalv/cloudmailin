@@ -10,6 +10,7 @@ from cloudmailin.config import FunctionalTestingConfig
 # Load .env file
 load_dotenv()
 
+
 # Assuming valid_email_payload.json exists in the test_data directory
 @pytest.fixture
 def valid_real_payload():
@@ -18,6 +19,7 @@ def valid_real_payload():
     """
     with open("tests/functional/test_data/valid_email_payload.json") as f:
         return json.load(f)
+
 
 @pytest.mark.parametrize(
     "handler_class",
@@ -68,7 +70,7 @@ def test_email_processing_flow_with_handler(
 
     # Verify the email is stored in Firestore
     docs = list(collection.stream())
- 
+
     assert len(docs) == 1  # Ensure one document is stored
 
     stored_data = docs[0].to_dict()
