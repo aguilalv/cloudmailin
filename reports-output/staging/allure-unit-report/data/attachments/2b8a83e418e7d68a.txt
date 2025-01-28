@@ -1,0 +1,14 @@
+INFO     cloudmailin:__init__.py:45 Application starting...
+ERROR    cloudmailin:db.py:39 Failed to store email in database: Firestore error
+Traceback (most recent call last):
+  File "/home/runner/work/cloudmailin/cloudmailin/cloudmailin/db.py", line 37, in store_email
+    collection.add(email_data)
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.8/x64/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+Exception: Firestore error
