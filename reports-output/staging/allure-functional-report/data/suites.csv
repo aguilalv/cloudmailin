@@ -1,10 +1,10 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Mon Jan 27 17:25:48 UTC 2025","Mon Jan 27 17:25:52 UTC 2025","3643","tests.functional","test_new_valid_email_flow","","","","test_email_processing_flow_with_handler[BaseHandler]","
+"passed","Tue Jan 28 16:22:52 UTC 2025","Tue Jan 28 16:22:53 UTC 2025","185","tests.functional","test_smoke","","","","test_healthcheck","
+    Test the health check endpoint for a 200 response and the expected data structure.
+    "
+"passed","Tue Jan 28 16:22:49 UTC 2025","Tue Jan 28 16:22:52 UTC 2025","3156","tests.functional","test_new_valid_email_flow","","","","test_email_processing_flow_with_handler[BaseHandler]","
     Functional test to verify end-to-end email processing flow:
     - Valid payload is sent to the server.
     - The correct handler processes the email (validated via the response or logs).
     - Email is 'stored' (simulated by checking the response).
-    "
-"passed","Mon Jan 27 17:25:52 UTC 2025","Mon Jan 27 17:25:52 UTC 2025","266","tests.functional","test_smoke","","","","test_healthcheck","
-    Test the health check endpoint for a 200 response and the expected data structure.
     "
