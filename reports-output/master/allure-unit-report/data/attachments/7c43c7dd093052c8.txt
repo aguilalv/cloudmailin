@@ -1,0 +1,3 @@
+INFO     cloudmailin:__init__.py:45 Application starting...
+INFO     cloudmailin:base_handler.py:24 [BaseHandler] Processing email from sender@example.com
+INFO     cloudmailin:base_handler.py:36 Email stored in database: Test Subject

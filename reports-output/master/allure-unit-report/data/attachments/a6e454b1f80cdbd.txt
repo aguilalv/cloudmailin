@@ -1,0 +1,2 @@
+{"timestamp": "2025-01-28T16:27:33.225022+00:00", "level": "INFO", "message": "Application starting..."}
+{"timestamp": "2025-01-28T16:27:33.229474+00:00", "level": "ERROR", "message": "Failed to store email in database: Firestore error"}
