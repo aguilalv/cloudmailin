@@ -1,0 +1,4 @@
+{"timestamp": "2025-01-28T16:29:59.421555+00:00", "level": "INFO", "message": "Application starting..."}
+{"timestamp": "2025-01-28T16:29:59.426385+00:00", "level": "INFO", "message": "Received request: POST /generic/new"}
+{"timestamp": "2025-01-28T16:29:59.427277+00:00", "level": "INFO", "message": "[BaseHandler] Processing email from sender@example.com"}
+{"timestamp": "2025-01-28T16:29:59.428432+00:00", "level": "INFO", "message": "Email stored in database: Test Subject"}
